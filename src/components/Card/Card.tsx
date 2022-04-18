@@ -1,6 +1,6 @@
 import React, {useEffect, useReducer, useState} from 'react';
 import styled from 'styled-components';
-import { PopUp } from '../PopUp';
+import { Modal } from '../Modal';
 import { ButtonDefault } from '../styled_components/button/ButtonDefault';
 import { ButtonDel } from '../styled_components/button/ButtonDel';
 
@@ -15,7 +15,7 @@ const Card = ({...props}) => {
         <img src='/email.png' alt='message' width={24} height={24} />
         <p>{props.comments}</p>
       </PhotoAndCounter>
-      <PopUp active={modalOpen} setActive={setModalOpen}>
+      <Modal active={modalOpen} setActive={setModalOpen}>
         <h3>Имя карточки</h3>
         <p>Автор поста: </p>
         <p>Description: </p>
@@ -49,7 +49,7 @@ const Card = ({...props}) => {
           </CommitItem>
         </CommitList>
         <ButtonDel>Delete this card</ButtonDel>
-      </PopUp>
+      </Modal>
     </CardItem>
   )
 }

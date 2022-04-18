@@ -11,8 +11,8 @@ const ListTask = styled.ul`
   width: 80%;
   margin: 0 auto 40px;
 `
-
-const ListMainTask = () => {   
+// type ListMainTaskProps = {[key: string]: any }
+const MainTasks = () => {   
   const ListOfTitles: Array<ListTitle> = [
     {id: 1, title: 'TODO'},
     {id: 2, title: 'In Progress'},
@@ -29,4 +29,4 @@ const ListMainTask = () => {
   )
 }
 
-export default ListMainTask
+export default MainTasks

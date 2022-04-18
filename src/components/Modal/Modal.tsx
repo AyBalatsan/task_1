@@ -1,7 +1,13 @@
 import React, {FC, useEffect,} from "react";
-import { PopUp } from "../../types";
 import styled from 'styled-components';
 import { ButtonClose } from "../styled_components/button/ButtonClose";
+
+interface PopUp {
+  active: boolean,
+  setActive: (target: boolean) => void,
+  children?: React.ReactNode
+}
+
 const Modal: FC<PopUp> = ({active, setActive, children}) => {
 
   const WrapperModal = styled.div`

@@ -1,11 +1,10 @@
 import React, {useEffect, useReducer, useState} from 'react';
 import styled from 'styled-components';
-import PopUp from '../PopUp/PopUp'
 import { ListCard } from '../../types';
 import {Card} from '../Card'
 import { InputDefault } from '../styled_components/input/InputDefault'; 
 
-const ItemMainTask = ({...props})=> {   
+const MainTask = ({...props})=> {   
   const ListCard: Array<ListCard> = [
     {id: 1, title: 'im text card', comments: 3},
     {id: 2, title: 'im text card', comments: 23},
@@ -28,7 +27,7 @@ const ItemMainTask = ({...props})=> {
   )
 }
 
-export default ItemMainTask
+export default MainTask
 
 const ListTask = styled.ul`
   width: 100%;
