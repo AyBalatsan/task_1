@@ -1,6 +1,21 @@
 import React from 'react';
 import styled from 'styled-components';
-import ListMainTask from './components/ListMainTask';
+import ListMainTask from './components/MainTasks/MainTasks';
+
+
+function App() {
+  
+  return (
+    <AppWrapper>
+      <AppSell>
+        <TitleH1>Task Board</TitleH1>
+        <ListMainTask />
+      </AppSell>
+    </AppWrapper>
+  );
+}
+
+export default App;
 
 const AppWrapper = styled.div`
   display: flex;
@@ -28,16 +43,3 @@ const TitleH1 = styled.h1`
   margin-bottom: 60px;
   color: gray;
 `
-
-function App() {
-  return (
-    <AppWrapper>
-      <AppSell>
-        <TitleH1>Task Board</TitleH1>
-        <ListMainTask />
-      </AppSell>
-    </AppWrapper>
-  );
-}
-
-export default App;

@@ -1,19 +1,19 @@
 import React, {useEffect, useReducer, useState} from 'react';
 import styled from 'styled-components';
-import PopUp from './PopUp'
+import { PopUp } from '../PopUp';
 
 
-export default function ItemCard({...props}) {   
+export default function Card({...props}) {   
   
-  const [modalOpen, setModalOpen] = useState(false)
+  const [modalOpen, setModalOpen] = useState(true)
 
   return (    
-    <li>
+    <CardItem>
       <p>{props.title}</p>
-      <div>
-        <img src='/email.png' alt='message' />
+      <PhotoAndCounter>
+        <img src='/email.png' alt='message' width={24} height={24} />
         <p>{props.comments}</p>
-      </div>
+      </PhotoAndCounter>
       <PopUp active={modalOpen} setActive={setModalOpen}>
         <h3>Имя карточки</h3>
         <p>Автор поста: </p>
@@ -35,6 +35,19 @@ export default function ItemCard({...props}) {
         </ul>
         <button>Delete this card</button>
       </PopUp>
-    </li>
+    </CardItem>
   )
 }
+const CardItem = styled.li`
+  display: flex;
+  justify-content: space-between;
+  
+  padding: 8px 0;
+  &+&{
+    border-top: 1px solid green;
+  }
+`
+const PhotoAndCounter = styled.div`
+  display: flex;
+  gap: 5px;
+`

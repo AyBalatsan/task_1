@@ -1,7 +1,7 @@
 import { title } from 'process';
 import React, {useEffect, useReducer} from 'react';
-import ItemMainTask from './ItemMainTask';
-import { ListTitle } from './types';
+import ItemMainTask from '../MainTask/MainTask';
+import { ListTitle } from '../../types';
 import styled from 'styled-components';
 
 const ListTask = styled.ul`
@@ -19,6 +19,7 @@ export default function ListMainTask() {
     {id: 3, title: 'Testing'},
     {id: 4, title: 'Done'},
   ]
+  
   return (
     <ListTask>
       {ListOfTitles.map (item =>(
