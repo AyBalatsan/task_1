@@ -1,8 +1,38 @@
 import React, {FC, useEffect,} from "react";
 import { PopUp } from "../../types";
 import styled from 'styled-components';
-
+import { ButtonClose } from "../styled_components/button/ButtonClose";
 const Modal: FC<PopUp> = ({active, setActive, children}) => {
+
+  const WrapperModal = styled.div`
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0,0,0, 0.4);
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  max-height: none;
+  opacity: ${active ? 1 : 0};
+  pointer-events:${active ? "all" : "none"}; 
+  transition: 0.5s all;
+  
+`
+
+const ModalContent = styled.div`
+  position: relative;
+  padding: 20px;
+  border-radius: 12px;
+  background-color: antiquewhite;
+  width: 50vw;
+  transform: ${active ? "scale(1)" : "scale(0)"};
+  transition: 0.5s all;
+`
+
+
   const closeModal = (e:any) => {
     if (e.key === 'Escape') {
       setActive(false)
@@ -19,7 +49,7 @@ const Modal: FC<PopUp> = ({active, setActive, children}) => {
       onClick={() => setActive(false)}
     >
       <ModalContent onClick={e => e.stopPropagation()}>
-        <button onClick={() => setActive(false)}>+</button>
+        <ButtonClose onClick={() => setActive(false)}>+</ButtonClose>
         {children}
       </ModalContent>
     </WrapperModal>
@@ -28,36 +58,3 @@ const Modal: FC<PopUp> = ({active, setActive, children}) => {
 
 export default Modal;
 
-const WrapperModal = styled.div`
-  height: 100vh;
-  width: 100vw;
-  background-color: rgba(0,0,0,0.4);
-  position: fixed;
-  top: 0;
-  left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 20;
-  max-height: none;
-  opacity: ${active => active ? 0 : 1};
-  pointer-events:${active => active ? "none" : "all"}; 
-  transition: 0.5s all;
-  
-`
-// .modal.active{
-//   opacity: 1;
-//   pointer-events: all;
-// }
-const ModalContent = styled.div`
-  position: relative;
-  padding: 20px;
-  border-radius: 12px;
-  background-color: antiquewhite;
-  width: 50vw;
-  transform: ${active => active ? "scale(1)" : "scale(0)"};
-  transition: 0.5s all;
-`
-// .modal__content.active{
-//   transform: ;
-// }

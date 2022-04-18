@@ -3,13 +3,9 @@ import styled from 'styled-components';
 import PopUp from '../PopUp/PopUp'
 import { ListCard } from '../../types';
 import {Card} from '../Card'
- 
-interface IProps{
-  ListCard: ListCard[]
+import { InputDefault } from '../styled_components/input/InputDefault'; 
 
-}
-
-export default function ItemMainTask({...props}) {   
+const ItemMainTask = ({...props})=> {   
   const ListCard: Array<ListCard> = [
     {id: 1, title: 'im text card', comments: 3},
     {id: 2, title: 'im text card', comments: 23},
@@ -22,7 +18,7 @@ export default function ItemMainTask({...props}) {
   return (
     <ItemTask>
       <h2>{props.title}</h2>
-      <InputText type='text' placeholder='Добавте задачу в раздел' />
+      <InputDefault type='text' placeholder='Добавте задачу в раздел' />
       <ListTask>
         {ListCard.map (item =>(
           <Card key={item.id} {...item} />
@@ -31,6 +27,9 @@ export default function ItemMainTask({...props}) {
     </ItemTask>
   )
 }
+
+export default ItemMainTask
+
 const ListTask = styled.ul`
   width: 100%;
   padding: 10px;
@@ -50,7 +49,6 @@ const ItemTask = styled.li`
   flex-direction: column;
   align-items: center;
 `
-
 const InputText = styled.input`
   display: block;
   width: 100%;

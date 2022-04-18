@@ -1,13 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import ListMainTask from './components/MainTasks/MainTasks';
-
+import { PopUp } from './components/PopUp';
+import { InputDefault } from './components/styled_components/input/InputDefault';
+import { ButtonDefault } from './components/styled_components/button/ButtonDefault';
 
 function App() {
-  
+  const[modalActive, setModalActive] = useState(true)
   return (
     <AppWrapper>
       <AppSell>
+        <PopUp active={modalActive} setActive={setModalActive}>
+          <p>Заполните имя автора</p>
+          <InputDefault 
+            placeholder='Имя автора'
+            type="text"
+          />
+          <ButtonDefault onClick={() => setModalActive(false)}>Ок</ButtonDefault>
+        </PopUp>
         <TitleH1>Task Board</TitleH1>
         <ListMainTask />
       </AppSell>

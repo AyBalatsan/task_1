@@ -12,7 +12,7 @@ const ListTask = styled.ul`
   margin: 0 auto 40px;
 `
 
-export default function ListMainTask() {   
+const ListMainTask = () => {   
   const ListOfTitles: Array<ListTitle> = [
     {id: 1, title: 'TODO'},
     {id: 2, title: 'In Progress'},
@@ -28,3 +28,5 @@ export default function ListMainTask() {
     </ListTask>
   )
 }
+
+export default ListMainTask
