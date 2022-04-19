@@ -1,14 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
-import MainPage from './pages/MainPage';
+import MainPage from './pages';
 
 
 function App() {  
     
-  return (
-    <AppWrapper>
-      <MainPage />
-    </AppWrapper>
+  return (      
+      <AppWrapper>
+        <MainPage />
+      </AppWrapper>
   );
 }
 

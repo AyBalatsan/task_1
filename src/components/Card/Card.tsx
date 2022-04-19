@@ -1,13 +1,27 @@
-import React, {useEffect, useReducer, useState} from 'react';
+import React, {FC, useEffect, useReducer, useState} from 'react';
 import styled from 'styled-components';
-import { Modal } from '../Modal';
-import { ButtonDefault } from '../styled_components/button/ButtonDefault';
-import { ButtonDel } from '../styled_components/button/ButtonDel';
+import { Modal, Commit } from '../';
+import { ButtonDel, ButtonDefault} from '../../styles/button';
 
-const Card = ({...props}) => {   
-  
+interface CardProps {
+  author: string | null,
+  title: string,
+  comments: number
+}
+
+const Card: FC<CardProps> = (props) => {    
   const [modalOpen, setModalOpen] = useState(false)
 
+  interface InterCommit {
+    id: number,
+    text: string
+  }
+
+  const ListCommit: Array<InterCommit> = [
+    {id: 1, text: 'Первый текст'},
+    {id: 2, text: 'Второй текст'},
+
+  ]
   return (    
     <CardItem>
       <p>{props.title}</p>
@@ -17,7 +31,7 @@ const Card = ({...props}) => {
       </PhotoAndCounter>
       <Modal active={modalOpen} setActive={setModalOpen}>
         <h3>Имя карточки</h3>
-        <p>Автор поста: </p>
+        <p>Автор поста: {props.author}</p>
         <p>Description: </p>
         <CommitArea />
         <ShellButton>
@@ -26,27 +40,10 @@ const Card = ({...props}) => {
           <button><img src="/delete.png" alt="del" /></button>
         </ShellButton>
         <CommitList>
-          <CommitItem>
-            <p>Text commit</p>
-            <ShellButton>              
-              <button><img src="/edit.png" alt="edit" /></button>
-              <button><img src="/delete.png" alt="del" /></button>
-            </ShellButton>
-          </CommitItem>
-          <CommitItem>
-            <p>Text commit</p>
-            <ShellButton>              
-              <button><img src="/edit.png" alt="edit" /></button>
-              <button><img src="/delete.png" alt="del" /></button>
-            </ShellButton>
-          </CommitItem>
-          <CommitItem>
-            <p>Text commit</p>
-            <ShellButton>              
-              <button><img src="/edit.png" alt="edit" /></button>
-              <button><img src="/delete.png" alt="del" /></button>
-            </ShellButton>
-          </CommitItem>
+          {ListCommit.map (commit =>(
+            <Commit key={commit.id} commit={commit.text} />            
+          ))}
+          
         </CommitList>
         <ButtonDel>Delete this card</ButtonDel>
       </Modal>
@@ -97,22 +94,6 @@ const CommitList = styled.ul`
   width: 100%;
   gap: 12px;
   margin: 16px 0;
-`
-const CommitItem = styled.li`
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  
-`
-const CommitText = styled.p`
-  width: 100%;
-  max-width: 760px;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 18px; 
-  line-height: 150%;  
-  font-feature-settings: 'pnum' on, 'lnum' on;
-  color: #5B5B5B;
 `
 const PhotoAndCounter = styled.div`
   display: flex;

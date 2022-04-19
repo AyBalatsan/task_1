@@ -1,18 +1,18 @@
 import React, { useState,  useEffect} from 'react';
 import styled from 'styled-components';
-import ListMainTask from '../components/MainTasks/MainTasks';
+import {MainTasks}  from '../components/';
 import { Modal } from '../components/Modal';
-import { InputDefault } from '../components/styled_components/input/InputDefault';
-import { ButtonDefault } from '../components/styled_components/button/ButtonDefault';
+import { InputDefault } from '../styles/input/InputDefault';
+import { ButtonDefault } from '../styles/button/ButtonDefault';
 
 type Author = string | null
 
-function MainPage() {
+const MainPage = () => {
   const[modalActive, setModalActive] = useState(false)
   const[nameUser, setNameUser] = useState<string | null>(null)
 
   let jAuthor: Author = localStorage.getItem('author') !== null ? JSON.parse(String(localStorage.getItem('author'))) : null
-console.log(jAuthor)
+    
   useEffect(()=>{
     if (jAuthor == null) {
         setModalActive(true)  
@@ -22,20 +22,29 @@ console.log(jAuthor)
         setModalActive(false)
     }
   }, [])
-    
+
+  useEffect(() =>{
+    localStorage.setItem('author', JSON.stringify(nameUser))
+  }, [nameUser])  
+    let valueAuthor: string
+    const addAuthor = (value:string) =>{
+      setNameUser(value)
+      setModalActive(false)
+    }
   return (
-    
+      
       <AppSell>
         <Modal active={modalActive} setActive={setModalActive}>
           <p>Заполните имя автора</p>
           <InputDefault 
             placeholder='Имя автора'
             type="text"
+            onChange={event => valueAuthor = event.target.value}            
           />
-          <ButtonDefault onClick={() => setModalActive(false)}>Подтвердить</ButtonDefault>
+          <ButtonDefault onClick={() => addAuthor(valueAuthor)}>Подтвердить</ButtonDefault>
         </Modal>
         <TitleH1>Task Board</TitleH1>
-        <ListMainTask />
+        {/* <MainTasks author={nameUser} /> */}
       </AppSell>
   );
 }

@@ -1,10 +1,16 @@
-import React, {useEffect, useReducer, useState} from 'react';
+import React, { FC } from 'react';
 import styled from 'styled-components';
 import { ListCard } from '../../types';
-import {Card} from '../Card'
-import { InputDefault } from '../styled_components/input/InputDefault'; 
+import { Card } from '../';
+import { InputDefault } from '../../styles/input/InputDefault'; 
 
-const MainTask = ({...props})=> {   
+
+interface MainTaskProps {
+  author: string | null,
+  title: string
+}
+
+const MainTask: FC<MainTaskProps> = (props)=> {    
   const ListCard: Array<ListCard> = [
     {id: 1, title: 'im text card', comments: 3},
     {id: 2, title: 'im text card', comments: 23},
@@ -12,7 +18,7 @@ const MainTask = ({...props})=> {
     {id: 4, title: 'im text card', comments: 13},
     {id: 5, title: 'im text card', comments: 2},
   ]
-  const [modalOpen, setModalOpen] = useState(false)
+  // const [modalOpen, setModalOpen] = useState(false)
 
   return (
     <ItemTask>
@@ -20,7 +26,7 @@ const MainTask = ({...props})=> {
       <InputDefault type='text' placeholder='Добавте задачу в раздел' />
       <ListTask>
         {ListCard.map (item =>(
-          <Card key={item.id} {...item} />
+          <Card key={item.id} author={props.author} title={item.title} comments={item.comments}  />
       ))}
       </ListTask>
     </ItemTask>
@@ -48,12 +54,4 @@ const ItemTask = styled.li`
   flex-direction: column;
   align-items: center;
 `
-const InputText = styled.input`
-  display: block;
-  width: 100%;
-  margin: 16px 0 24px;
-  padding: 4px;
-  font-size: 16px;
-  border: none;
-  background-color: inherit;
-`
+
