@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useReducer, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import styled from 'styled-components';
 import { Modal, Commit } from '../';
 import { ButtonDel, ButtonDefault} from '../../styles/button';
@@ -23,7 +23,9 @@ const Card: FC<CardProps> = (props) => {
 
   ]
   return (    
-    <CardItem>
+    <CardItem
+      onClick={ ()=> setModalOpen(true)}
+    >
       <p>{props.title}</p>
       <PhotoAndCounter>
         <img src='/email.png' alt='message' width={24} height={24} />
@@ -84,6 +86,7 @@ const CardItem = styled.li`
   display: flex;
   justify-content: space-between;  
   padding: 8px 0;
+  cursor: pointer;
   &+&{
     border-top: 1px solid green;
   }

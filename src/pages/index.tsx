@@ -44,7 +44,7 @@ const MainPage = () => {
           <ButtonDefault onClick={() => addAuthor(valueAuthor)}>Подтвердить</ButtonDefault>
         </Modal>
         <TitleH1>Task Board</TitleH1>
-        {/* <MainTasks author={nameUser} /> */}
+        <MainTasks author={nameUser} />
       </AppSell>
   );
 }
