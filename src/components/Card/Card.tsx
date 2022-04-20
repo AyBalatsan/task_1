@@ -1,37 +1,36 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useState} from 'react';
 import styled from 'styled-components';
 import { Modal, Commit } from '../';
-import { ButtonDel, ButtonDefault} from '../../styles/button';
+import { ButtonDelete, ButtonDefault} from '../../styles/button';
 
-interface CardProps {
+interface cardProps {
   author: string | null,
   title: string,
   comments: number
 }
+interface interCommit {
+  id: number,
+  text: string
+}
+const listCommit: Array<interCommit> = [
+  {id: 1, text: 'Первый текст'},
+  {id: 2, text: 'Второй текст'},
 
-const Card: FC<CardProps> = (props) => {    
-  const [modalOpen, setModalOpen] = useState(false)
+]
+const Card: FC<cardProps> = (props) => {    
 
-  interface InterCommit {
-    id: number,
-    text: string
-  }
+  const [isVisibleModal, setIsVisibleModal] = useState(false)
 
-  const ListCommit: Array<InterCommit> = [
-    {id: 1, text: 'Первый текст'},
-    {id: 2, text: 'Второй текст'},
-
-  ]
   return (    
     <CardItem
-      onClick={ ()=> setModalOpen(true)}
+      onClick={ ()=> setIsVisibleModal(true)}
     >
       <p>{props.title}</p>
       <PhotoAndCounter>
         <img src='/email.png' alt='message' width={24} height={24} />
         <p>{props.comments}</p>
       </PhotoAndCounter>
-      <Modal active={modalOpen} setActive={setModalOpen}>
+      <Modal active={isVisibleModal} setActive={setIsVisibleModal}>
         <h3>Имя карточки</h3>
         <p>Автор поста: {props.author}</p>
         <p>Description: </p>
@@ -42,12 +41,11 @@ const Card: FC<CardProps> = (props) => {
           <button><img src="/delete.png" alt="del" /></button>
         </ShellButton>
         <CommitList>
-          {ListCommit.map (commit =>(
+          {listCommit.map (commit =>(
             <Commit key={commit.id} commit={commit.text} />            
-          ))}
-          
+          ))}          
         </CommitList>
-        <ButtonDel>Delete this card</ButtonDel>
+        <ButtonDelete>Delete this card</ButtonDelete>
       </Modal>
     </CardItem>
   )
@@ -100,7 +98,8 @@ const CommitList = styled.ul`
 `
 const PhotoAndCounter = styled.div`
   display: flex;
-  gap: 5px;
+  justify-content: space-between;
+  min-width: 50px;
 `
 const ShellButton = styled.div`
   display: flex;

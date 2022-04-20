@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState} from 'react';
+import React, { FC, useEffect, useState, useMemo} from 'react';
 import {MainTask, Modal} from '../';
 import styled from 'styled-components';
 
@@ -10,15 +10,16 @@ interface ListTitle {
   id: number,
   title: string
 }
-
+const listOfTitles: Array<ListTitle> = [
+  {id: 1, title: 'TODO'},
+  {id: 2, title: 'In Progress'},
+  {id: 3, title: 'Testing'},
+  {id: 4, title: 'Done'},
+]
 const MainTasks: FC<MainTaskProps> = (props) => {    
-  const ListOfTitles: Array<ListTitle> = [
-    {id: 1, title: 'TODO'},
-    {id: 2, title: 'In Progress'},
-    {id: 3, title: 'Testing'},
-    {id: 4, title: 'Done'},
-  ]
-  let jList = localStorage.getItem('TitleList') !== null ? JSON.parse(String(localStorage.getItem('TitleList'))) : ListOfTitles
+  
+  let jList = localStorage.getItem('TitleList') !== null ? JSON.parse(String(localStorage.getItem('TitleList'))) : listOfTitles
+
   
   const [stateTitleList, setStateTitleList] = useState(jList)
   // Тут нужно переписать, перерисовка происходит при перезагрузки
@@ -28,8 +29,7 @@ const MainTasks: FC<MainTaskProps> = (props) => {
   }, [stateTitleList]) 
 
   return (    
-    <ListTask>
-      
+    <ListTask>      
       {jList.map((item: { id: number; title: string; }) => (
         <MainTask key={item.id} id={item.id} title={item.title} author={props.author} setStateTitleList = {setStateTitleList}/>
       ))}

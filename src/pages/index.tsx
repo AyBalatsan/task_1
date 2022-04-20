@@ -7,33 +7,34 @@ import { ButtonDefault } from '../styles/button/ButtonDefault';
 type Author = string | null
 
 const MainPage = () => {
-  const[modalActive, setModalActive] = useState(false)
+  const[isVisibleModal, setIsVisibleModal] = useState(false)
   const[nameUser, setNameUser] = useState<string | null>(null)
 
   let jAuthor: Author = localStorage.getItem('author') !== null ? JSON.parse(String(localStorage.getItem('author'))) : null
     
   useEffect(()=>{
     if (jAuthor == null) {
-        setModalActive(true)  
+      setIsVisibleModal(true)  
         setNameUser(jAuthor)      
     } else {
         setNameUser(jAuthor)
-        setModalActive(false)
+        setIsVisibleModal(false)
     }
   }, [])
 
   useEffect(() =>{
     localStorage.setItem('author', JSON.stringify(nameUser))
-  }, [nameUser])  
+  }, [nameUser]) 
+
     let valueAuthor: string
+    
     const addAuthor = (value:string) =>{
       setNameUser(value)
-      setModalActive(false)
+      setIsVisibleModal(false)
     }
-  return (
-      
+  return (      
       <AppSell>
-        <Modal active={modalActive} setActive={setModalActive}>
+        <Modal active={isVisibleModal} setActive={setIsVisibleModal}>
           <p>Заполните имя автора</p>
           <InputDefault 
             placeholder='Имя автора'
@@ -42,10 +43,10 @@ const MainPage = () => {
           />
           <ButtonDefault onClick={() => addAuthor(valueAuthor)}>Подтвердить</ButtonDefault>
         </Modal>
-        <TitleH1>Task Board</TitleH1>
+        <Title>Task Board</Title>
         <MainTasks author={nameUser} />
       </AppSell>
-  );
+  )
 }
 
 {/* <ListMainTask author={nameUser} /> */}
@@ -61,7 +62,7 @@ const AppSell = styled.div`
   display: flex;
   flex-direction: column;
 `
-const TitleH1 = styled.h1`
+const Title = styled.h1`
   font-size: 36px;
   text-align: center;
   margin-bottom: 60px;

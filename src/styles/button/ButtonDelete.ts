@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const ButtonDel = styled.button`  
+export const ButtonDelete = styled.button`  
   position: relative;
   display: inline-block;
   width: 10em;

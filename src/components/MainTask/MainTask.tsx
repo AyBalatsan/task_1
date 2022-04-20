@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { ListCard, ListTitle} from '../../types';
 import { Card, Modal } from '../';
@@ -12,38 +12,54 @@ interface MainTaskProps {
   setStateTitleList: any,
   id: number
 }
+const listCard: Array<ListCard> = []
 
 const MainTask: FC<MainTaskProps> = (props)=> {    
-  const ListCard: Array<ListCard> = [
-    {id: 1, title: 'im text card', comments: 3},
-    {id: 2, title: 'im text card', comments: 23},
-    {id: 3, title: 'im text card', comments: 31},
-    {id: 4, title: 'im text card', comments: 13},
-    {id: 5, title: 'im text card', comments: 2},
-  ]
 
-  const [modalActive, setModalActive] = useState(false)
+  const [isVisibleModal, setIsVisibleModal] = useState(false)
   let valueTitle: string 
   const JListTitle = JSON.parse(String(localStorage.getItem('TitleList')))
-  
-  
 
+
+  // Для карточек
+  let jListCard = localStorage.getItem('Card' + props.id) !== null ? JSON.parse(String(localStorage.getItem('Card' + props.id))) : listCard
+  const [stateCard, setStateCard] = useState(jListCard)
+  const [newName, setNewName]= useState('')
+
+  useEffect(() => {
+    localStorage.setItem('Card' + props.id, JSON.stringify(stateCard))
+  }, [stateCard])
+
+  const addCard = (event: { key: string; }) => {
+    if (event.key === 'Enter' && newName !== '') {
+      console.log(stateCard);
+      setStateCard( [
+        ...stateCard,
+        {
+          id: Date.now(),
+          title: newName,
+          comments: 0
+        }
+      ])
+    }
+  }
+
+  // Исправление названия досок с задачами
   const editTitle = (title: string, id: number) => {
     const body: Array<ListTitle> =  JListTitle.map((item: ListTitle) => {
-      if (item.id == id) {
+      if (item.id === id) {
         item.title = title
       }
       return item
-    })
-    
+    })    
     props.setStateTitleList(body)
-    setModalActive(false)
+    setIsVisibleModal(false)
   }
 
   return (
     <ItemTask>
-      <h2 onClick={() => setModalActive(true)}>{props.title}</h2>
-      <Modal active={modalActive} setActive={setModalActive}>
+      <h2 onClick={() => setIsVisibleModal(true)}>{props.title}</h2>
+      <Modal active={isVisibleModal} setActive={setIsVisibleModal}>
         <p>Изменить название блока задач</p>
         <InputDefault
           placeholder='Новое наименование задачи'
@@ -52,11 +68,17 @@ const MainTask: FC<MainTaskProps> = (props)=> {
         />
         <ButtonDefault onClick={() => editTitle(valueTitle, props.id)}>Подтвердить</ButtonDefault>
       </Modal>
-      <InputDefault type='text' placeholder='Добавте задачу в раздел' />
+      <InputDefault
+        type="text"
+        value={newName}
+        onChange={event => setNewName(event.target.value)}
+        onKeyPress={addCard}
+        placeholder='Todo name'
+       />
       <ListTask>
-        {ListCard.map (item =>(
+        {/* {stateCard.map((item: { id: number; title: string; comments: number; }) =>(
           <Card key={item.id} author={props.author} title={item.title} comments={item.comments}  />
-      ))}
+      ))} */}
       </ListTask>
     </ItemTask>
   )

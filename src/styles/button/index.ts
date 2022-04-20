@@ -1,5 +1,4 @@
-import {ButtonClose} from './ButtonClose'
-import {ButtonDefault} from './ButtonDefault'
-import {ButtonDel} from './ButtonDel'
+export {ButtonClose} from './ButtonClose'
+export {ButtonDefault} from './ButtonDefault'
+export {ButtonDelete} from './ButtonDelete'
 
-export {ButtonClose, ButtonDefault, ButtonDel}

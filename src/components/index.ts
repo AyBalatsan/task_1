@@ -1,7 +1,5 @@
-import {Modal} from './Modal'
-import {MainTask} from './MainTask'
-import {MainTasks} from './MainTasks'
-import {Card} from './Card'
-import {Commit} from './Commit'
-
-export {Modal, MainTasks, MainTask, Card, Commit}
+export {Modal} from './Modal'
+export {MainTask} from './MainTask'
+export {MainTasks} from './MainTasks'
+export {Card} from './Card'
+export {Commit} from './Commit'

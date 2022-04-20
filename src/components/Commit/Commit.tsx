@@ -1,11 +1,11 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
 
-interface ICommitProps {
+interface CommitProps {
   commit: string
 }
 
-const Commit: FC<ICommitProps> = (props) => {    
+const Commit: FC<CommitProps> = (props) => {    
   return (       
     <CommitItem>
       <CommitText>{props.commit}</CommitText>
