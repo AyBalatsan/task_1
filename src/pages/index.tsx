@@ -1,7 +1,6 @@
 import React, { useState,  useEffect} from 'react';
 import styled from 'styled-components';
-import {MainTasks}  from '../components/';
-import { Modal } from '../components/Modal';
+import {MainTasks, Modal}  from '../components';
 import { InputDefault } from '../styles/input/InputDefault';
 import { ButtonDefault } from '../styles/button/ButtonDefault';
 
