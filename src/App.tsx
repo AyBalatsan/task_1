@@ -5,9 +5,9 @@ import { listTitle } from './mockDate';
 
 const App = () => {     
 return (      
-      <AppWrapper>
-        <MainPage listTitle = {listTitle} />
-      </AppWrapper>
+  <AppWrapper>
+    <MainPage listTitle = {listTitle} />
+  </AppWrapper>
   );
 }
 

@@ -5,10 +5,10 @@ interface CommitProps {
   commit: string
 }
 
-const Commit: FC<CommitProps> = (props) => {    
+const Commit: FC<CommitProps> = ({commit}) => {    
   return (       
     <CommitItem>
-      <CommitText>{props.commit}</CommitText>
+      <CommitText>{commit}</CommitText>
       <ShellButton>              
         <button><img src="/edit.png" alt="edit" /></button>
         <button><img src="/delete.png" alt="del" /></button>

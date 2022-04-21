@@ -1,7 +1,7 @@
 import React, {FC, useState} from 'react';
 import styled from 'styled-components';
 import { InfoCard} from '../../types';
-interface cardProps {
+interface СardProps {
   id: number,
   title: string,
   comments: number,
@@ -10,7 +10,7 @@ interface cardProps {
   setInfoCard: {(modal: InfoCard): void}
 }
 
-const Card: FC<cardProps> = ({id, title, comments, setIsVisibleCard, setInfoCard, nameKeyCard}) => {    
+const Card: FC<СardProps> = ({id, title, comments, setIsVisibleCard, setInfoCard, nameKeyCard}) => {    
 
   return (    
     <CardItem

@@ -27,35 +27,37 @@ const MainPage: FC<AllDataProps> = ({listTitle}) => {
   const[idTitle, setIdTitle] = useState(0) 
   // Хранение информации Card
   const[infoCard, setInfoCard] = useState<InfoCard>() 
+
   // Смотрит есть ли имя автора, если нет активирует модалку 
-  let jAuthor: Author = localStorage.getItem('author') !== null ? JSON.parse(String(localStorage.getItem('author'))) : null
+  let authorInformation: Author = localStorage.getItem('author') !== null ? JSON.parse(String(localStorage.getItem('author'))) : null
     
   useEffect(() => {
-    if (jAuthor == null) {
+    if (authorInformation == null) {
       setIsVisibleModal(true)
-      setNameAuthor(jAuthor)
     } else {
-      setNameAuthor(jAuthor)
-      setIsVisibleModal(false)
+      setNameAuthor(authorInformation)
     }
   }, [])  
 
   const addAuthor = () => {
-    localStorage.setItem('author', JSON.stringify(nameAuthor))
-    setIsVisibleModal(false)
+    if (nameAuthor) {
+      localStorage.setItem('author', nameAuthor)
+      setIsVisibleModal(false)      
+    }
   }
 
   // Изменение имени Title
   let jList = localStorage.getItem('TitleList') !== null ? JSON.parse(String(localStorage.getItem('TitleList'))) : listTitle
-
+// переправить на informationTitle jList
   const [stateTitleList, setStateTitleList] = useState(jList)
-  // Тут нужно переписать, перерисовка происходит при перезагрузки
+  // Тут нужно переписать, перерисовка происходит при перезагрузки Убрать в название Title
 
   useEffect(() => {
     localStorage.setItem('TitleList', JSON.stringify(stateTitleList))   
   }, [stateTitleList]) 
 
   const editTitle = () => {
+    // Прочитать способы передачи изменения состояния
     const body =  stateTitleList.map((item: List) => {
       if (item.id === idTitle) {
         item.title = valueTitle
@@ -68,6 +70,7 @@ const MainPage: FC<AllDataProps> = ({listTitle}) => {
   
   // добавление комментариев 
   const [bodyCard, setBodyCard] = useState()
+  // cardDescription
   const [description, setDescription] = useState()
   const [descValue, setDescValue] = useState('')
   useEffect(() => {
@@ -79,18 +82,21 @@ const MainPage: FC<AllDataProps> = ({listTitle}) => {
       setDescription(description)      
     }
   }, [infoCard])
-  // const addDescription = () => {
-  //   if (descValue == '') {
-  //     const body = infoCards.map((item: AllInformation) => {
-  //       if (item.id === infoCard.CardID) {
-  //         item.description = descValue
-  //       }
-  //       return item
-  //     })
-  //     localStorage.setItem(infoCard.nameKeyList, body)
-  //   }
-  // }
-
+    
+  const addDescription = () => {
+    if (descValue !== '') {
+      const body = (bodyCard || []).map((item: AllInformation) => {
+        if (item.id === infoCard?.CardID) {
+          item.description = descValue
+        }
+        return item
+      })
+      if (infoCard) {
+        localStorage.setItem(infoCard.nameKeyList, JSON.stringify(body)) 
+      }
+    }
+  }
+ 
   return (      
     <AppSell>
       {/* Модальное окно Author */}
@@ -115,7 +121,7 @@ const MainPage: FC<AllDataProps> = ({listTitle}) => {
       </Modal>
       {/* Модальное окно Card */}
       <Modal active={isVisibleCard} setActive={setIsVisibleCard}>
-        
+                {/*Ветвление в компоненте */}
         <h3>Имя карточки: {infoCard?.CardTitle}</h3>
         <p>Автор поста: {nameAuthor}</p>
         <p>Description: {description}</p>
@@ -125,7 +131,7 @@ const MainPage: FC<AllDataProps> = ({listTitle}) => {
         />
         <ShellButton>
           <ButtonDefault
-            // onClick={addDescription()}
+            onClick={()=>addDescription()}
           >Добавить описание</ButtonDefault>
           <button><img src="/edit.png" alt="edit" /></button>
           <button><img src="/delete.png" alt="del" /></button>
