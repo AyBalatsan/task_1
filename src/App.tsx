@@ -1,17 +1,12 @@
-import React, { FC } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import MainPage from './pages';
+import { listTitle } from './mockDate';
 
-interface AllDataProps {
-  id: number,
-  title: string
-  
-}
-
-const App = ({mockDate}: Array<AllDataProps>) => {     
-  return (      
+const App = () => {     
+return (      
       <AppWrapper>
-        <MainPage  />
+        <MainPage listTitle = {listTitle} />
       </AppWrapper>
   );
 }
@@ -28,4 +23,3 @@ const AppWrapper = styled.div`
   padding: 60px 40px;
   position: relative;
 `
-

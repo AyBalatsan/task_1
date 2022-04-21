@@ -1,37 +1,38 @@
 import React, { FC, useEffect, useState} from 'react';
 import {TaskItem} from '..';
 import styled from 'styled-components';
+import {InfoCard} from '../../types'
 
+type List = {id: number, title: string}
 
-// interface MainTaskProps {
-//   author: string | null
-// }
-interface ListTitle {
-  id: number,
-  title: string
+interface AllDataProps {   
+  setIsVisibleTitle: {(modal: boolean): void;}
+  setIsVisibleCard: {(modal: boolean): void;}
+  setIdTitle: {(modal: number): void;}
+  setInfoCard: {(modal: InfoCard): void}
+  jList: Array<List> 
 }
-const listOfTitles: Array<ListTitle> = [
-  {id: 1, title: 'TODO'},
-  {id: 2, title: 'In Progress'},
-  {id: 3, title: 'Testing'},
-  {id: 4, title: 'Done'},
-]
-const TaskList = () => {    
-  
-  let jList = localStorage.getItem('TitleList') !== null ? JSON.parse(String(localStorage.getItem('TitleList'))) : listOfTitles
 
-  
-  const [stateTitleList, setStateTitleList] = useState(jList)
-  // Тут нужно переписать, перерисовка происходит при перезагрузки
-
-  useEffect(() => {
-    localStorage.setItem('TitleList', JSON.stringify(stateTitleList))
-  }, [stateTitleList]) 
-
+const TaskList: FC<AllDataProps> = (
+  {
+    setIsVisibleTitle,  
+    setIsVisibleCard, 
+    setIdTitle, 
+    setInfoCard,
+    jList
+  }) => {    
   return (    
     <ListTask>      
       {jList.map((item: { id: number; title: string; }) => (
-        <TaskItem key={item.id} id={item.id} title={item.title} setStateTitleList = {setStateTitleList}/>
+        <TaskItem 
+          key={item.id} 
+          id={item.id} 
+          title={item.title} 
+          setIsVisibleTitle = {setIsVisibleTitle}
+          setIsVisibleCard = {setIsVisibleCard}
+          setIdTitle = {setIdTitle}
+          setInfoCard = {setInfoCard}
+        />
       ))}
     </ListTask>    
   )

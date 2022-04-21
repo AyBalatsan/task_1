@@ -1,32 +1,35 @@
 import React, {FC, useState} from 'react';
 import styled from 'styled-components';
-import { ButtonDelete, ButtonDefault} from '../../styles/button';
-
+import { InfoCard} from '../../types';
 interface cardProps {
-  title: string,
-  comments: number
-}
-interface interCommit {
   id: number,
-  text: string
+  title: string,
+  comments: number,
+  nameKeyCard: string
+  setIsVisibleCard: {(modal: boolean): void}
+  setInfoCard: {(modal: InfoCard): void}
 }
-const listCommit: Array<interCommit> = [
-  {id: 1, text: 'Первый текст'},
-  {id: 2, text: 'Второй текст'},
 
-]
-const Card: FC<cardProps> = (props) => {    
+const Card: FC<cardProps> = ({id, title, comments, setIsVisibleCard, setInfoCard, nameKeyCard}) => {    
 
   return (    
     <CardItem
-      // onClick={ ()=> setIsVisibleModal(true)}
+      onClick={ ()=> {
+        setIsVisibleCard(true)        
+        setInfoCard({
+          CardID: id,
+          CardTitle: title,
+          comments: 0,
+          nameKeyList: nameKeyCard
+        })
+        }        
+      }      
     >
-      <p>{props.title}</p>
+      <p>{title}</p>
       <PhotoAndCounter>
         <img src='/email.png' alt='message' width={24} height={24} />
-        <p>{props.comments}</p>
-      </PhotoAndCounter>
-      
+        <p>{comments}</p>
+      </PhotoAndCounter>      
     </CardItem>
   )
 }

@@ -8,3 +8,16 @@ export interface ListCard {
   title: string,
   comments: number,
 }
+export interface AllInformation {
+  id: number,
+  title: string,
+  description: string
+  comments: Array<ListTitle>,
+  
+}
+export interface InfoCard {
+  CardID: number,
+  CardTitle: string,
+  comments: number,
+  nameKeyList: string
+}     

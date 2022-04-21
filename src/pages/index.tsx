@@ -1,12 +1,18 @@
-import React, { useState,  useEffect} from 'react';
+import React, { useState,  useEffect, FC} from 'react';
 import styled from 'styled-components';
 import {TaskList, Modal, Commit}  from '../components';
 import { InputDefault } from '../styles/input/InputDefault';
 import { ButtonDefault, ButtonDelete} from '../styles/button';
-
+import {InfoCard, AllInformation} from '../types'
+ 
 type Author = string | null
+type List = {id: number, title: string}
 
-const MainPage = () => {
+interface AllDataProps {          
+  listTitle: Array<List> 
+}
+
+const MainPage: FC<AllDataProps> = ({listTitle}) => {  
   // Открытие окна автора
   const[isVisibleModal, setIsVisibleModal] = useState(false)
   // Открытие изменения заголовков
@@ -17,10 +23,13 @@ const MainPage = () => {
   const[nameAuthor, setNameAuthor] = useState<string | null>(null)
   // Данные строки title
   const[valueTitle, setValueTitle] = useState('') 
-
-
+  // Хранение id title
+  const[idTitle, setIdTitle] = useState(0) 
+  // Хранение информации Card
+  const[infoCard, setInfoCard] = useState<InfoCard>() 
   // Смотрит есть ли имя автора, если нет активирует модалку 
   let jAuthor: Author = localStorage.getItem('author') !== null ? JSON.parse(String(localStorage.getItem('author'))) : null
+    
   useEffect(() => {
     if (jAuthor == null) {
       setIsVisibleModal(true)
@@ -29,14 +38,59 @@ const MainPage = () => {
       setNameAuthor(jAuthor)
       setIsVisibleModal(false)
     }
-  }, [])
-  useEffect(() => {
+  }, [])  
+
+  const addAuthor = () => {
     localStorage.setItem('author', JSON.stringify(nameAuthor))
-  }, [nameAuthor])
-  const addAuthor = (value: string) => {
-    setNameAuthor(value)
     setIsVisibleModal(false)
   }
+
+  // Изменение имени Title
+  let jList = localStorage.getItem('TitleList') !== null ? JSON.parse(String(localStorage.getItem('TitleList'))) : listTitle
+
+  const [stateTitleList, setStateTitleList] = useState(jList)
+  // Тут нужно переписать, перерисовка происходит при перезагрузки
+
+  useEffect(() => {
+    localStorage.setItem('TitleList', JSON.stringify(stateTitleList))   
+  }, [stateTitleList]) 
+
+  const editTitle = () => {
+    const body =  stateTitleList.map((item: List) => {
+      if (item.id === idTitle) {
+        item.title = valueTitle
+      }
+      return item
+    })    
+    setStateTitleList(body)
+    setIsVisibleTitle(false)
+  }
+  
+  // добавление комментариев 
+  const [bodyCard, setBodyCard] = useState()
+  const [description, setDescription] = useState()
+  const [descValue, setDescValue] = useState('')
+  useEffect(() => {
+    if (infoCard !== undefined) {
+      const infoCards = JSON.parse(String(localStorage.getItem(infoCard.nameKeyList)))
+      const setBody = () => infoCards
+      setBodyCard(setBody())
+      const description = setBody().find((item: { id: number; }) => item.id === infoCard.CardID).description
+      setDescription(description)      
+    }
+  }, [infoCard])
+  // const addDescription = () => {
+  //   if (descValue == '') {
+  //     const body = infoCards.map((item: AllInformation) => {
+  //       if (item.id === infoCard.CardID) {
+  //         item.description = descValue
+  //       }
+  //       return item
+  //     })
+  //     localStorage.setItem(infoCard.nameKeyList, body)
+  //   }
+  // }
+
   return (      
     <AppSell>
       {/* Модальное окно Author */}
@@ -45,9 +99,9 @@ const MainPage = () => {
         <InputDefault
           placeholder='Имя автора'
           type="text"
-          onChange={event => valueAuthor = event.target.value}
+          onChange={event => setNameAuthor(event.target.value)}          
         />
-        <ButtonDefault onClick={() => addAuthor(valueAuthor)}>Подтвердить</ButtonDefault>
+        <ButtonDefault onClick={() => addAuthor()}>Подтвердить</ButtonDefault>
       </Modal>
       {/* Модальное окно Title */}
       <Modal active={isVisibleTitle} setActive={setIsVisibleTitle}>
@@ -57,33 +111,44 @@ const MainPage = () => {
           type="text"
           onChange={event => setValueTitle(event.target.value)}
         />
-        {/* <ButtonDefault onClick={() => editTitle(valueTitle, props.id)}>Подтвердить</ButtonDefault> */}
+        <ButtonDefault onClick={() => editTitle()}>Подтвердить</ButtonDefault>
       </Modal>
       {/* Модальное окно Card */}
       <Modal active={isVisibleCard} setActive={setIsVisibleCard}>
-        <h3>Имя карточки</h3>
+        
+        <h3>Имя карточки: {infoCard?.CardTitle}</h3>
         <p>Автор поста: {nameAuthor}</p>
-        <p>Description: </p>
-        <CommitArea />
+        <p>Description: {description}</p>
+        <CommitArea 
+          defaultValue={description}
+          onChange= {event => setDescValue(event.target.value)}
+        />
         <ShellButton>
-          <ButtonDefault>Добавить описание</ButtonDefault>
+          <ButtonDefault
+            // onClick={addDescription()}
+          >Добавить описание</ButtonDefault>
           <button><img src="/edit.png" alt="edit" /></button>
           <button><img src="/delete.png" alt="del" /></button>
         </ShellButton>
-        {/* <CommitList>
-            {listCommit.map(commit => (
+        <CommitList>
+            {/* {listCommit.map(commit => (
               <Commit key={commit.id} commit={commit.text} />
-            ))}
-          </CommitList> */}
+            ))} */}
+          </CommitList>
         <ButtonDelete>Delete this card</ButtonDelete>
       </Modal>
       <Title>Task Board</Title>
-      <TaskList />
+      <TaskList 
+        jList={jList}
+        setInfoCard={setInfoCard}
+        setIdTitle={setIdTitle}
+        setIsVisibleTitle={setIsVisibleTitle}
+        setIsVisibleCard={setIsVisibleCard}
+      />
     </AppSell>
   )
 }
 
-{/* <ListMainTask  /> */}
 export default MainPage;
 
 const AppSell = styled.div`
