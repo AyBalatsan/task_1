@@ -1,5 +1,5 @@
 export {Modal} from './Modal'
-export {MainTask} from './MainTask'
-export {MainTasks} from './MainTasks'
+export {TaskItem} from './TaskItem'
+export {TaskList} from './TaskList'
 export {Card} from './Card'
 export {Commit} from './Commit'

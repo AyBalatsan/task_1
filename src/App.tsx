@@ -1,13 +1,17 @@
-import React from 'react';
+import React, { FC } from 'react';
 import styled from 'styled-components';
 import MainPage from './pages';
 
+interface AllDataProps {
+  id: number,
+  title: string
+  
+}
 
-function App() {  
-    
+const App = ({mockDate}: Array<AllDataProps>) => {     
   return (      
       <AppWrapper>
-        <MainPage />
+        <MainPage  />
       </AppWrapper>
   );
 }

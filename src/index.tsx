@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {createGlobalStyle, ThemeProvider} from 'styled-components' ;
-
+import { mockDate } from './mockDate';
 const Global = createGlobalStyle`
 *,*::before,*::after {
   box-sizing: border-box;
@@ -66,7 +66,7 @@ root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <Global />
-      <App />   
+      <App mockDate={mockDate.listTitle} />   
     </ThemeProvider>
   </React.StrictMode>
 );

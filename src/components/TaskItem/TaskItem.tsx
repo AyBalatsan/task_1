@@ -1,22 +1,18 @@
 import React, { FC, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { ListCard, ListTitle} from '../../types';
-import { Card, Modal } from '../';
 import { InputDefault } from '../../styles/input/InputDefault';
-import { ButtonDefault } from '../../styles/button/ButtonDefault';
 
 
 interface MainTaskProps {
-  author: string | null,
   title: string,
   setStateTitleList: any,
   id: number
 }
 const listCard: Array<ListCard> = []
 
-const MainTask: FC<MainTaskProps> = (props)=> {    
+const TaskItem: FC<MainTaskProps> = (props)=> {    
 
-  const [isVisibleModal, setIsVisibleModal] = useState(false)
   let valueTitle: string 
   const JListTitle = JSON.parse(String(localStorage.getItem('TitleList')))
 
@@ -53,21 +49,12 @@ const MainTask: FC<MainTaskProps> = (props)=> {
       return item
     })    
     props.setStateTitleList(body)
-    setIsVisibleModal(false)
+    // setIsVisibleModal(false)
   }
 
   return (
-    <ItemTask>
-      <h2 onClick={() => setIsVisibleModal(true)}>{props.title}</h2>
-      <Modal active={isVisibleModal} setActive={setIsVisibleModal}>
-        <p>Изменить название блока задач</p>
-        <InputDefault
-          placeholder='Новое наименование задачи'
-          type="text"
-          onChange={event => valueTitle = event.target.value}
-        />
-        <ButtonDefault onClick={() => editTitle(valueTitle, props.id)}>Подтвердить</ButtonDefault>
-      </Modal>
+    <ItemTaskWrapper>
+      {/* <h2 onClick={() => setIsVisibleModal(true)}>{props.title}</h2>       */}
       <InputDefault
         type="text"
         value={newName}
@@ -77,14 +64,14 @@ const MainTask: FC<MainTaskProps> = (props)=> {
        />
       <ListTask>
         {/* {stateCard.map((item: { id: number; title: string; comments: number; }) =>(
-          <Card key={item.id} author={props.author} title={item.title} comments={item.comments}  />
+          <Card key={item.id} title={item.title} comments={item.comments}  />
       ))} */}
       </ListTask>
-    </ItemTask>
+    </ItemTaskWrapper>
   )
 }
 
-export default MainTask
+export default TaskItem
 
 const ListTask = styled.ul`
   width: 100%;
@@ -94,7 +81,7 @@ const ListTask = styled.ul`
   gap: 8px 0;
   justify-content: center;
 `
-const ItemTask = styled.li`
+const ItemTaskWrapper = styled.li`
   width: 100%;
   min-height: 200px;
   border: 4px solid #f7dab4;

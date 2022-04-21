@@ -1,11 +1,11 @@
-import React, { FC, useEffect, useState, useMemo} from 'react';
-import {MainTask, Modal} from '../';
+import React, { FC, useEffect, useState} from 'react';
+import {TaskItem} from '..';
 import styled from 'styled-components';
 
 
-interface MainTaskProps {
-  author: string | null
-}
+// interface MainTaskProps {
+//   author: string | null
+// }
 interface ListTitle {
   id: number,
   title: string
@@ -16,7 +16,7 @@ const listOfTitles: Array<ListTitle> = [
   {id: 3, title: 'Testing'},
   {id: 4, title: 'Done'},
 ]
-const MainTasks: FC<MainTaskProps> = (props) => {    
+const TaskList = () => {    
   
   let jList = localStorage.getItem('TitleList') !== null ? JSON.parse(String(localStorage.getItem('TitleList'))) : listOfTitles
 
@@ -31,13 +31,13 @@ const MainTasks: FC<MainTaskProps> = (props) => {
   return (    
     <ListTask>      
       {jList.map((item: { id: number; title: string; }) => (
-        <MainTask key={item.id} id={item.id} title={item.title} author={props.author} setStateTitleList = {setStateTitleList}/>
+        <TaskItem key={item.id} id={item.id} title={item.title} setStateTitleList = {setStateTitleList}/>
       ))}
     </ListTask>    
   )
 }
 
-export default MainTasks
+export default TaskList
 
 const ListTask = styled.ul`
   display: grid;
