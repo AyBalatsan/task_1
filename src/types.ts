@@ -18,6 +18,6 @@ export interface AllInformation {
 export interface InfoCard {
   CardID: number,
   CardTitle: string,
-  comments: number,
+  comments: Array<ListTitle>,
   nameKeyList: string
 }     

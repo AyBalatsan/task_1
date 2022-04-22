@@ -1,19 +1,20 @@
 import React, { FC, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { ListCard, InfoCard} from '../../types';
+import { ListCard, InfoCard, ListTitle} from '../../types';
 import { InputDefault } from '../../styles/input/InputDefault';
 import {Card} from '..';
 interface MainTaskProps {
   title: string,
   id: number
   setIsVisibleModalTitle: {(modal: boolean): void;},
-  setIsVisibleCard: {(modal: boolean): void}
-  setIdTitle: {(modal: number): void;}
+  setIsVisibleModalCard: {(modal: boolean): void}
+  redrawingCommit: boolean
+  setTitleBodyItem: {(modal: ListTitle): void;}
   setInfoCard: {(modal: InfoCard): void}
 }
 const listCard: Array<ListCard> = []
 
-const TaskItem: FC<MainTaskProps> = ({id, title, setIsVisibleModalTitle, setIsVisibleCard, setIdTitle, setInfoCard})=> {    
+const TaskItem: FC<MainTaskProps> = ({id, title, setIsVisibleModalTitle, setIsVisibleModalCard, redrawingCommit, setTitleBodyItem, setInfoCard})=> {    
 
   // Для карточек
   let jListCard = localStorage.getItem('Card' + id) !== null ? JSON.parse(String(localStorage.getItem('Card' + id))) : listCard
@@ -21,8 +22,8 @@ const TaskItem: FC<MainTaskProps> = ({id, title, setIsVisibleModalTitle, setIsVi
   const [newName, setNewName]= useState('')
 
   useEffect(() => {
-    localStorage.setItem('Card' + id, JSON.stringify(stateCard))
-  }, [stateCard])
+    localStorage.setItem('Card' + id, JSON.stringify(stateCard))    
+  }, [stateCard, redrawingCommit])
 
   const addCard = (event: { key: string; }) => {
     if (event.key === 'Enter' && newName !== '') {      
@@ -31,7 +32,7 @@ const TaskItem: FC<MainTaskProps> = ({id, title, setIsVisibleModalTitle, setIsVi
         {
           id: Date.now(),
           title: newName,
-          description: 'opis',
+          description: '',
           comments: []
         }
       ])
@@ -42,7 +43,7 @@ const TaskItem: FC<MainTaskProps> = ({id, title, setIsVisibleModalTitle, setIsVi
     <ItemTaskWrapper>
       <h2 onClick={()=> {
         setIsVisibleModalTitle(true)
-        setIdTitle(id)
+        setTitleBodyItem({id, title})
       }}>{title}</h2>      
       <InputDefault
         type="text"
@@ -59,7 +60,7 @@ const TaskItem: FC<MainTaskProps> = ({id, title, setIsVisibleModalTitle, setIsVi
             nameKeyCard={'Card' + id}
             title={item.title}
             comments={item.comments.length}
-            setIsVisibleCard={setIsVisibleCard}
+            setIsVisibleModalCard={setIsVisibleModalCard}
             setInfoCard={setInfoCard}
           />
       ))}

@@ -1,25 +1,26 @@
-import React, {FC, useState} from 'react';
+import React, {FC} from 'react';
 import styled from 'styled-components';
 import { InfoCard} from '../../types';
-interface СardProps {
+
+interface CardProps {
   id: number,
   title: string,
   comments: number,
   nameKeyCard: string
-  setIsVisibleCard: {(modal: boolean): void}
-  setInfoCard: {(modal: InfoCard): void}
+  setIsVisibleModalCard: {(modal: boolean): void}
+  setInfoCard: {(modal: InfoCard): void}  
 }
 
-const Card: FC<СardProps> = ({id, title, comments, setIsVisibleCard, setInfoCard, nameKeyCard}) => {    
+const Card: FC<CardProps> = ({id, title, comments, setIsVisibleModalCard, setInfoCard, nameKeyCard}) => {    
 
   return (    
     <CardItem
       onClick={ ()=> {
-        setIsVisibleCard(true)        
+        setIsVisibleModalCard(true)        
         setInfoCard({
           CardID: id,
           CardTitle: title,
-          comments: 0,
+          comments: [],
           nameKeyList: nameKeyCard
         })
         }        

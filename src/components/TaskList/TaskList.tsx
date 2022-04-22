@@ -7,31 +7,34 @@ type List = {id: number, title: string}
 
 interface AllDataProps {   
   setIsVisibleModalTitle: {(modal: boolean): void;}
-  setIsVisibleCard: {(modal: boolean): void;}
-  setIdTitle: {(modal: number): void;}
+  setIsVisibleModalCard: {(modal: boolean): void;}
+  redrawingCommit: boolean
+  setTitleBodyItem: {(modal: List): void;}
   setInfoCard: {(modal: InfoCard): void}
-  jList: Array<List> 
+  titleList: Array<List> 
 }
 
 const TaskList: FC<AllDataProps> = (
   {
     setIsVisibleModalTitle,  
-    setIsVisibleCard, 
-    setIdTitle, 
+    setIsVisibleModalCard,
+    redrawingCommit, 
+    setTitleBodyItem, 
     setInfoCard,
-    jList
+    titleList
   }) => {    
   return (    
     <ListTask>      
-      {jList.map((item: { id: number; title: string; }) => (
+      {titleList.map((item: { id: number; title: string; }) => (
         <TaskItem 
           key={item.id} 
           id={item.id} 
           title={item.title} 
           setIsVisibleModalTitle = {setIsVisibleModalTitle}
-          setIsVisibleCard = {setIsVisibleCard}
-          setIdTitle = {setIdTitle}
+          setIsVisibleModalCard = {setIsVisibleModalCard}
+          setTitleBodyItem = {setTitleBodyItem}
           setInfoCard = {setInfoCard}
+          redrawingCommit={redrawingCommit}
         />
       ))}
     </ListTask>    

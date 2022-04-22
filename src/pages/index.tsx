@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { TaskList, Modal, Commit } from '../components';
 import { InputDefault } from '../styles/input/InputDefault';
 import { ButtonDefault, ButtonDelete } from '../styles/button';
-import { InfoCard, AllInformation } from '../types'
+import { InfoCard, AllInformation, ListTitle } from '../types'
 
 type Author = string | null
 type List = { id: number, title: string }
@@ -15,14 +15,13 @@ interface AllDataProps {
 const MainPage: FC<AllDataProps> = ({ listTitle }) => {
   const [isVisibleModalAuthor, setIsVisibleModalAuthor] = useState(false)
   const [isVisibleModalTitle, setIsVisibleModalTitle] = useState(false)
-  const [isVisibleCard, setIsVisibleCard] = useState(false)
-
+  const [isVisibleModalCard, setIsVisibleModalCard] = useState(false)
 
   const [nameAuthor, setNameAuthor] = useState<Author>(null)
   // Данные строки title
   const [valueTitle, setValueTitle] = useState('')
   // Хранение id title
-  const [idTitle, setIdTitle] = useState(0)
+  const [titleBodyItem, setTitleBodyItem] = useState<ListTitle>()
   // Хранение информации Card
   const [infoCard, setInfoCard] = useState<InfoCard>()
 
@@ -30,7 +29,7 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
   let authorInformation: Author = localStorage.getItem('author') !== null ? JSON.parse(String(localStorage.getItem('author'))) : null
 
   useEffect(() => {
-    if (authorInformation == null) {
+    if (authorInformation === null) {
       setIsVisibleModalAuthor(true)
     } else {
       setNameAuthor(authorInformation)
@@ -39,47 +38,52 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
 
   const addAuthor = () => {
     if (nameAuthor) {
-      localStorage.setItem('author', nameAuthor)
+      localStorage.setItem('author', JSON.stringify(nameAuthor))
       setIsVisibleModalAuthor(false)
-    }
-  }
-
+    }    
+  }  
+   
   // Изменение имени Title
-  let jList = localStorage.getItem('TitleList') !== null ? JSON.parse(String(localStorage.getItem('TitleList'))) : listTitle
-  // переправить на informationTitle jList
-  const [stateTitleList, setStateTitleList] = useState(jList)
+  let informationTitle = localStorage.getItem('TitleList') !== null ? JSON.parse(String(localStorage.getItem('TitleList'))) : listTitle
+  const [titleList, setTitleList] = useState(informationTitle)
   // Тут нужно переписать, перерисовка происходит при перезагрузки Убрать в название Title
 
   useEffect(() => {
-    localStorage.setItem('TitleList', JSON.stringify(stateTitleList))
-  }, [stateTitleList])
+    localStorage.setItem('TitleList', JSON.stringify(titleList))
+  }, [titleList])
 
-  const editTitle = () => {
-    // Прочитать способы передачи изменения состояния
-    const body = stateTitleList.map((item: List) => {
-      if (item.id === idTitle) {
+  const editTitle = () => {    
+    const body = titleList.map((item: List) => {
+      if (item.id === titleBodyItem?.id) {
         item.title = valueTitle
       }
       return item
     })
-    setStateTitleList(body)
+    setTitleList(body)
     setIsVisibleModalTitle(false)
   }
 
-  // добавление комментариев 
+  // добавление Description 
   const [bodyCard, setBodyCard] = useState()
-  // cardDescription
-  const [description, setDescription] = useState()
+  const [cardDescription, setCardDescription] = useState()
   const [descValue, setDescValue] = useState('')
+  const [redrawingDescription, setRedrawingDescription] = useState(false)
+  // добавление comment
+  const [cardComments, setCardComments] = useState<List[]>([] as List[])
+  const [cardCommentValue, setCardCommentValue] = useState('')
+  const [redrawingCommit, setRedrawingCommit] = useState(false)
   useEffect(() => {
     if (infoCard !== undefined) {
+      console.log(infoCard);      
       const infoCards = JSON.parse(String(localStorage.getItem(infoCard.nameKeyList)))
       const setBody = () => infoCards
       setBodyCard(setBody())
       const description = setBody().find((item: { id: number; }) => item.id === infoCard.CardID).description
-      setDescription(description)
+      setCardDescription(description)
+      const arrayOfComments = setBody().find((item: { id: number; }) => item.id === infoCard.CardID).comments
+      setCardComments(arrayOfComments)
     }
-  }, [infoCard])
+  }, [infoCard, redrawingDescription])
 
   const addDescription = () => {
     if (descValue !== '') {
@@ -92,8 +96,39 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
       if (infoCard) {
         localStorage.setItem(infoCard.nameKeyList, JSON.stringify(body))
       }
+      setRedrawingDescription(!redrawingDescription)      
     }
   }
+  const deleteDescription = () => {
+    if (descValue !== '') {
+      const body = (bodyCard || []).map((item: AllInformation) => {
+        if (item.id === infoCard?.CardID) {
+          item.description = ''
+        }
+        return item
+      })
+      if (infoCard) {
+        localStorage.setItem(infoCard.nameKeyList, JSON.stringify(body))
+      }
+      setRedrawingDescription(!redrawingDescription)      
+    }
+  }
+  const addComment = (event: { key: string; }) => {
+    if (event.key === 'Enter' && cardCommentValue !== '') {
+      const body = (bodyCard || []).map((item: AllInformation) => {
+        if (item.id === infoCard?.CardID) {
+          item.comments.push({id: Date.now(), title: cardCommentValue}) 
+        }
+        return item
+      })
+      if (infoCard) {
+        localStorage.setItem(infoCard.nameKeyList, JSON.stringify(body))
+      }
+      // setRedrawingCommit(!redrawingCommit)    
+      setRedrawingDescription(!redrawingDescription)  
+    }
+  }
+  
   return (
     <AppSell>
       {/* Модальное окно Author */}
@@ -110,21 +145,20 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
       <Modal active={isVisibleModalTitle} setActive={setIsVisibleModalTitle}>
         <p>Изменить название блока задач</p>
         <InputDefault
-          placeholder='Новое наименование задачи'
+          defaultValue={titleBodyItem?.title}
           type="text"
-          onChange={event => setValueTitle(event.target.value)}
+          onChange={event => setValueTitle(event.target.value)}          
         />
         <ButtonDefault onClick={() => editTitle()}>Подтвердить</ButtonDefault>
       </Modal>
       {/* Модальное окно Card */}
-      <Modal active={isVisibleCard} setActive={setIsVisibleCard}>
+      <Modal active={isVisibleModalCard} setActive={setIsVisibleModalCard}>
         {/*Ветвление в компоненте */}
         <h3>Имя карточки: {infoCard?.CardTitle}</h3>
         <p>Автор поста: {nameAuthor}</p>
         <DescriptionShell>
-          <p>Description: {description}</p>
+          <p>Description: {cardDescription}</p>
           <CommitArea
-            defaultValue={description}
             onChange={event => setDescValue(event.target.value)}
           />
           <ShellButton>
@@ -132,30 +166,34 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
               onClick={() => addDescription()}
             >Добавить описание</ButtonDefault>
             <button><img src="/edit.png" alt="edit" /></button>
-            <button><img src="/delete.png" alt="del" /></button>
+            <button
+              onClick={() => deleteDescription()}
+            ><img src="/delete.png" alt="del" /></button>
           </ShellButton>
         </DescriptionShell>
         <CommitShell>
           <InputDefault
             placeholder='Добавь свой классный комментарий'
             type="text"
-            // onChange={event => setValueTitle(event.target.value)}
+            onChange={event => setCardCommentValue(event.target.value)}
+            onKeyPress={addComment}
           />
           <CommitList>
-            {/* {listCommit.map(commit => (
-              <Commit key={commit.id} commit={commit.text} />
-            ))} */}
+            {(cardComments || []).map((commit: List) => (
+              <Commit key={commit.id} commit={commit.title} />
+            ))}            
           </CommitList>
         </CommitShell>
         <ButtonDelete>Delete this card</ButtonDelete>
       </Modal>
       <Title>Task Board</Title>
       <TaskList
-        jList={jList}
+        titleList={titleList}
         setInfoCard={setInfoCard}
-        setIdTitle={setIdTitle}
+        setTitleBodyItem={setTitleBodyItem}
         setIsVisibleModalTitle={setIsVisibleModalTitle}
-        setIsVisibleCard={setIsVisibleCard}
+        setIsVisibleModalCard={setIsVisibleModalCard}
+        redrawingCommit={redrawingCommit}
       />
     </AppSell>
   )
@@ -217,6 +255,21 @@ const CommitList = styled.ul`
   width: 100%;
   gap: 12px;
   margin: 16px 0;
+  overflow: auto;
+  max-height: 260px;
+  padding: 0 12px;
+  &::-webkit-scrollbar {
+  width: 12px;               
+}
+  &::-webkit-scrollbar-track {
+  background: #fcd999;   
+  border-radius: 20px;
+}
+  &::-webkit-scrollbar-thumb {
+  background-color: #26a69a;    /* цвет плашки */
+  border-radius: 20px;       /* закругления плашки */
+  border: 3px solid orange;  /* padding вокруг плашки */
+}
 `
 const DescriptionShell = styled.div`
   margin: 16px 0;
