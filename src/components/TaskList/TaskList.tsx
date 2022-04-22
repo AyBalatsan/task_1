@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState} from 'react';
+import React, {FC} from 'react';
 import {TaskItem} from '..';
 import styled from 'styled-components';
 import {InfoCard} from '../../types'
@@ -6,7 +6,7 @@ import {InfoCard} from '../../types'
 type List = {id: number, title: string}
 
 interface AllDataProps {   
-  setIsVisibleTitle: {(modal: boolean): void;}
+  setIsVisibleModalTitle: {(modal: boolean): void;}
   setIsVisibleCard: {(modal: boolean): void;}
   setIdTitle: {(modal: number): void;}
   setInfoCard: {(modal: InfoCard): void}
@@ -15,7 +15,7 @@ interface AllDataProps {
 
 const TaskList: FC<AllDataProps> = (
   {
-    setIsVisibleTitle,  
+    setIsVisibleModalTitle,  
     setIsVisibleCard, 
     setIdTitle, 
     setInfoCard,
@@ -28,7 +28,7 @@ const TaskList: FC<AllDataProps> = (
           key={item.id} 
           id={item.id} 
           title={item.title} 
-          setIsVisibleTitle = {setIsVisibleTitle}
+          setIsVisibleModalTitle = {setIsVisibleModalTitle}
           setIsVisibleCard = {setIsVisibleCard}
           setIdTitle = {setIdTitle}
           setInfoCard = {setInfoCard}

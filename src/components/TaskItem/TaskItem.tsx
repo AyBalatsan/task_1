@@ -6,14 +6,14 @@ import {Card} from '..';
 interface MainTaskProps {
   title: string,
   id: number
-  setIsVisibleTitle: {(modal: boolean): void;},
+  setIsVisibleModalTitle: {(modal: boolean): void;},
   setIsVisibleCard: {(modal: boolean): void}
   setIdTitle: {(modal: number): void;}
   setInfoCard: {(modal: InfoCard): void}
 }
 const listCard: Array<ListCard> = []
 
-const TaskItem: FC<MainTaskProps> = ({id, title, setIsVisibleTitle, setIsVisibleCard, setIdTitle, setInfoCard})=> {    
+const TaskItem: FC<MainTaskProps> = ({id, title, setIsVisibleModalTitle, setIsVisibleCard, setIdTitle, setInfoCard})=> {    
 
   // Для карточек
   let jListCard = localStorage.getItem('Card' + id) !== null ? JSON.parse(String(localStorage.getItem('Card' + id))) : listCard
@@ -41,7 +41,7 @@ const TaskItem: FC<MainTaskProps> = ({id, title, setIsVisibleTitle, setIsVisible
   return (
     <ItemTaskWrapper>
       <h2 onClick={()=> {
-        setIsVisibleTitle(true)
+        setIsVisibleModalTitle(true)
         setIdTitle(id)
       }}>{title}</h2>      
       <InputDefault
@@ -52,13 +52,13 @@ const TaskItem: FC<MainTaskProps> = ({id, title, setIsVisibleTitle, setIsVisible
         placeholder='Todo name'
        />
       <ListTask>
-        {stateCard.map((item: { id: number; title: string; comments: number; }) =>(
+        {stateCard.map((item: { id: number; title: string; comments: Array<ListCard>; }) =>(
           <Card
             key={item.id}
             id={item.id}
             nameKeyCard={'Card' + id}
             title={item.title}
-            comments={item.comments}
+            comments={item.comments.length}
             setIsVisibleCard={setIsVisibleCard}
             setInfoCard={setInfoCard}
           />
