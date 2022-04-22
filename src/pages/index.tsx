@@ -13,11 +13,11 @@ interface AllDataProps {
 }
 
 const MainPage: FC<AllDataProps> = ({ listTitle }) => {
-  const [isVisibleModalAuthor, setIsVisibleModalAuthor] = useState(false)
+  
   const [isVisibleModalTitle, setIsVisibleModalTitle] = useState(false)
   const [isVisibleModalCard, setIsVisibleModalCard] = useState(false)
 
-  const [nameAuthor, setNameAuthor] = useState<Author>(null)
+  // const [nameAuthor, setNameAuthor] = useState<Author>(null)
   // Данные строки title
   const [valueTitle, setValueTitle] = useState('')
   // Хранение id title
@@ -27,14 +27,10 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
 
   // Смотрит есть ли имя автора, если нет активирует модалку 
   let authorInformation: Author = localStorage.getItem('author') !== null ? JSON.parse(String(localStorage.getItem('author'))) : null
-
-  useEffect(() => {
-    if (authorInformation === null) {
-      setIsVisibleModalAuthor(true)
-    } else {
-      setNameAuthor(authorInformation)
-    }
-  }, [])
+  
+  const initialisVisibleModalAuthor = !Boolean(authorInformation)
+  const [isVisibleModalAuthor, setIsVisibleModalAuthor] = useState(initialisVisibleModalAuthor)
+  const [nameAuthor, setNameAuthor] = useState<Author>(authorInformation)  
 
   const addAuthor = () => {
     if (nameAuthor) {
@@ -69,18 +65,16 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
   const [descValue, setDescValue] = useState('')
   const [redrawingDescription, setRedrawingDescription] = useState(false)
   // добавление comment
-  const [cardComments, setCardComments] = useState<List[]>([] as List[])
+  const [cardComments, setCardComments] = useState<List[]>()
   const [cardCommentValue, setCardCommentValue] = useState('')
   const [redrawingCommit, setRedrawingCommit] = useState(false)
   useEffect(() => {
-    if (infoCard !== undefined) {
-      console.log(infoCard);      
-      const infoCards = JSON.parse(String(localStorage.getItem(infoCard.nameKeyList)))
-      const setBody = () => infoCards
-      setBodyCard(setBody())
-      const description = setBody().find((item: { id: number; }) => item.id === infoCard.CardID).description
+    if (infoCard !== undefined) {      
+      const infoCards = JSON.parse(String(localStorage.getItem(infoCard.nameKeyList)))      
+      setBodyCard(infoCards)
+      const description = infoCards.find((item: { id: number; }) => item.id === infoCard.CardID).description
       setCardDescription(description)
-      const arrayOfComments = setBody().find((item: { id: number; }) => item.id === infoCard.CardID).comments
+      const arrayOfComments = infoCards.find((item: { id: number; }) => item.id === infoCard.CardID).comments
       setCardComments(arrayOfComments)
     }
   }, [infoCard, redrawingDescription])
@@ -179,9 +173,9 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
             onKeyPress={addComment}
           />
           <CommitList>
-            {(cardComments || []).map((commit: List) => (
+            {cardComments?.map((commit: List) => (
               <Commit key={commit.id} commit={commit.title} />
-            ))}            
+            ))}
           </CommitList>
         </CommitShell>
         <ButtonDelete>Delete this card</ButtonDelete>
