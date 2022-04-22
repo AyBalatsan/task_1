@@ -1,5 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
+import MainPage from './pages';
+import { listTitle } from './mockDate';
+
+const App = () => {     
+return (      
+  <AppWrapper>
+    <MainPage listTitle = {listTitle} />
+  </AppWrapper>
+  );
+}
+
+export default App;
 
 const AppWrapper = styled.div`
   display: flex;
@@ -11,13 +23,3 @@ const AppWrapper = styled.div`
   padding: 60px 40px;
   position: relative;
 `
- 
-function App() {
-  return (
-    <AppWrapper>
-      <h1>settings default</h1>
-    </AppWrapper>
-  );
-}
-
-export default App;
