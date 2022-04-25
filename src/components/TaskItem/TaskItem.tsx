@@ -13,21 +13,28 @@ interface MainTaskProps {
 }
 const listCard: Array<ListCard> = []
 
-const TaskItem: FC<MainTaskProps> = ({id, title, setIsVisibleModalTitle, setIsVisibleModalCard, setTitleBodyItem, setInfoCard})=> {    
+const TaskItem: FC<MainTaskProps> = ({
+  id,
+  title, 
+  setIsVisibleModalTitle, 
+  setIsVisibleModalCard, 
+  setTitleBodyItem, 
+  setInfoCard
+})=> {    
 
   // Для карточек
-  let jListCard = localStorage.getItem('Card' + id) !== null ? JSON.parse(String(localStorage.getItem('Card' + id))) : listCard
-  const [stateCard, setStateCard] = useState(jListCard)
+  let allCardsInTheList = localStorage.getItem('Card' + id) !== null ? JSON.parse(String(localStorage.getItem('Card' + id))) : listCard
+  const [card, setCard] = useState(allCardsInTheList)
   const [newName, setNewName]= useState('')
 
   useEffect(() => {
-    localStorage.setItem('Card' + id, JSON.stringify(stateCard))    
-  }, [stateCard])
+    localStorage.setItem('Card' + id, JSON.stringify(card))    
+  }, [card])
 
   const addCard = (event: { key: string; }) => {
     if (event.key === 'Enter' && newName !== '') {      
-      setStateCard( [
-        ...stateCard,
+      setCard( [
+        ...card,
         {
           id: Date.now(),
           title: newName,
@@ -52,7 +59,7 @@ const TaskItem: FC<MainTaskProps> = ({id, title, setIsVisibleModalTitle, setIsVi
         placeholder='Todo name'
        />
       <ListTask>
-        {stateCard.map((item: { id: number; title: string; comments: Array<ListCard>; }) =>(
+        {card.map((item: { id: number; title: string; comments: Array<ListCard>; }) =>(
           <Card
             key={item.id}
             id={item.id}

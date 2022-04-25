@@ -68,16 +68,18 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
   const [cardComments, setCardComments] = useState<List[]>()
   const [cardCommentValue, setCardCommentValue] = useState('')
   const [redrawingCommit, setRedrawingCommit] = useState(false)
-  useEffect(() => {
+
+
+  useEffect(() => {   
     if (infoCard !== undefined) {
       const infoCards = JSON.parse(String(localStorage.getItem(infoCard.nameKeyList)))
-      setBodyCard(infoCards)
-      const description = infoCards.find((item: { id: number; }) => item.id === infoCard.CardID).description
-      setCardDescription(description)
-      const arrayOfComments = infoCards.find((item: { id: number; }) => item.id === infoCard.CardID).comments
-
-      setCardComments(arrayOfComments)
-    }
+        setBodyCard(infoCards)
+        const description = infoCards.find((item: { id: number; }) => item.id === infoCard.CardID).description
+        setCardDescription(description)
+        const arrayOfComments = infoCards.find((item: { id: number; }) => item.id === infoCard.CardID).comments
+  
+        setCardComments(arrayOfComments)
+      } 
   }, [infoCard, redrawingDescription])
 
 
@@ -123,28 +125,33 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
       }
       setRedrawingDescription(!redrawingDescription)
     }
-  }
- 
+  } 
   const deleteCommit = (id: number) => {
     const nameKeyThisList = infoCard?.nameKeyList
     if (nameKeyThisList) {
-      // setCardComments(cardComments?.filter(subItem => subItem.id !== id))
-      
-
       const body = (bodyCard || []).map((item: AllInformation) => {
         if (item.id === infoCard?.CardID) {
-          item.comments.filter(subItem => subItem.id !== id)
+          setCardComments(item.comments.filter(subItem => subItem.id !== id))  
+          return {...item, comments: item.comments.filter(subItem => subItem.id !== id)}                  
         }
         return item
-      })
-      console.log(body);
-      
+      })            
       if (infoCard) {
-        localStorage.setItem(infoCard.nameKeyList, JSON.stringify(body))
-      }
-      
+        localStorage.setItem(nameKeyThisList, JSON.stringify(body))
+      }      
     }
+    setRedrawingCommit(!redrawingCommit)
   }
+  const deleteCard = () => {
+    const nameKeyThisList = infoCard?.nameKeyList 
+    if (nameKeyThisList) {
+      const body = (bodyCard || []).filter((subItem: AllInformation) => subItem.id !== infoCard.CardID)
+      if (infoCard) {
+        localStorage.setItem(nameKeyThisList, JSON.stringify(body))
+      }
+      setIsVisibleModalCard(false)            
+  }  
+}   
   return (
     <AppSell>
       {/* Модальное окно Author */}
@@ -181,7 +188,6 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
             <ButtonDefault
               onClick={() => addDescription()}
             >Добавить описание</ButtonDefault>
-            <button><img src="/edit.png" alt="edit" /></button>
             <button
               onClick={() => deleteDescription()}
             ><img src="/delete.png" alt="del" /></button>
@@ -200,12 +206,14 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
                 key={commit.id}
                 id={commit.id}
                 commit={commit.title}
-                deleteCommit={deleteCommit}
+                deleteCommit={deleteCommit}                
               />
             ))}
           </CommitList>
         </CommitShell>
-        <ButtonDelete>Delete this card</ButtonDelete>
+        <ButtonDelete 
+          onClick={() => deleteCard()}
+        >Delete this card</ButtonDelete>
       </Modal>
       <Title>Task Board</Title>
       <TaskList

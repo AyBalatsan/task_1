@@ -12,7 +12,6 @@ const Commit: FC<CommitProps> = ({commit, id, deleteCommit}) => {
     <CommitItem>
       <CommitText>{commit}</CommitText>
       <ShellButton>              
-        <button><img src="/edit.png" alt="edit" /></button>
         <button><img src="/delete.png" alt="del" onClick={()=> deleteCommit(id)}/></button>
       </ShellButton>
     </CommitItem>        

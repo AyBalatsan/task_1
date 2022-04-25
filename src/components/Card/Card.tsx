@@ -8,11 +8,10 @@ interface CardProps {
   comments: number,
   nameKeyCard: string
   setIsVisibleModalCard: {(modal: boolean): void}
-  setInfoCard: {(modal: InfoCard): void}  
+  setInfoCard: {(modal: InfoCard): void} 
 }
 
 const Card: FC<CardProps> = ({id, title, comments, setIsVisibleModalCard, setInfoCard, nameKeyCard}) => {    
-
   return (    
     <CardItem
       onClick={ ()=> {

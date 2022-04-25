@@ -19,7 +19,7 @@ const TaskList: FC<AllDataProps> = (
     setIsVisibleModalCard,
     setTitleBodyItem, 
     setInfoCard,
-    titleList
+    titleList,
   }) => {    
   return (    
     <ListTask>      
