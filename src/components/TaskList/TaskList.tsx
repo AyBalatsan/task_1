@@ -8,7 +8,6 @@ type List = {id: number, title: string}
 interface AllDataProps {   
   setIsVisibleModalTitle: {(modal: boolean): void;}
   setIsVisibleModalCard: {(modal: boolean): void;}
-  redrawingCommit: boolean
   setTitleBodyItem: {(modal: List): void;}
   setInfoCard: {(modal: InfoCard): void}
   titleList: Array<List> 
@@ -18,7 +17,6 @@ const TaskList: FC<AllDataProps> = (
   {
     setIsVisibleModalTitle,  
     setIsVisibleModalCard,
-    redrawingCommit, 
     setTitleBodyItem, 
     setInfoCard,
     titleList
@@ -34,7 +32,6 @@ const TaskList: FC<AllDataProps> = (
           setIsVisibleModalCard = {setIsVisibleModalCard}
           setTitleBodyItem = {setTitleBodyItem}
           setInfoCard = {setInfoCard}
-          redrawingCommit={redrawingCommit}
         />
       ))}
     </ListTask>    

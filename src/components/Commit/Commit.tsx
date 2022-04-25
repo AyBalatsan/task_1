@@ -3,15 +3,17 @@ import styled from 'styled-components';
 
 interface CommitProps {
   commit: string
+  id: number
+  deleteCommit: {(modal: number): void}
 }
 
-const Commit: FC<CommitProps> = ({commit}) => {    
+const Commit: FC<CommitProps> = ({commit, id, deleteCommit}) => {    
   return (       
     <CommitItem>
       <CommitText>{commit}</CommitText>
       <ShellButton>              
         <button><img src="/edit.png" alt="edit" /></button>
-        <button><img src="/delete.png" alt="del" /></button>
+        <button><img src="/delete.png" alt="del" onClick={()=> deleteCommit(id)}/></button>
       </ShellButton>
     </CommitItem>        
   )

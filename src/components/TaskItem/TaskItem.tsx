@@ -8,13 +8,12 @@ interface MainTaskProps {
   id: number
   setIsVisibleModalTitle: {(modal: boolean): void;},
   setIsVisibleModalCard: {(modal: boolean): void}
-  redrawingCommit: boolean
   setTitleBodyItem: {(modal: ListTitle): void;}
   setInfoCard: {(modal: InfoCard): void}
 }
 const listCard: Array<ListCard> = []
 
-const TaskItem: FC<MainTaskProps> = ({id, title, setIsVisibleModalTitle, setIsVisibleModalCard, redrawingCommit, setTitleBodyItem, setInfoCard})=> {    
+const TaskItem: FC<MainTaskProps> = ({id, title, setIsVisibleModalTitle, setIsVisibleModalCard, setTitleBodyItem, setInfoCard})=> {    
 
   // Для карточек
   let jListCard = localStorage.getItem('Card' + id) !== null ? JSON.parse(String(localStorage.getItem('Card' + id))) : listCard
@@ -23,7 +22,7 @@ const TaskItem: FC<MainTaskProps> = ({id, title, setIsVisibleModalTitle, setIsVi
 
   useEffect(() => {
     localStorage.setItem('Card' + id, JSON.stringify(stateCard))    
-  }, [stateCard, redrawingCommit])
+  }, [stateCard])
 
   const addCard = (event: { key: string; }) => {
     if (event.key === 'Enter' && newName !== '') {      

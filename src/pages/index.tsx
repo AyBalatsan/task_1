@@ -13,7 +13,7 @@ interface AllDataProps {
 }
 
 const MainPage: FC<AllDataProps> = ({ listTitle }) => {
-  
+
   const [isVisibleModalTitle, setIsVisibleModalTitle] = useState(false)
   const [isVisibleModalCard, setIsVisibleModalCard] = useState(false)
 
@@ -27,18 +27,18 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
 
   // Смотрит есть ли имя автора, если нет активирует модалку 
   let authorInformation: Author = localStorage.getItem('author') !== null ? JSON.parse(String(localStorage.getItem('author'))) : null
-  
+
   const initialisVisibleModalAuthor = !Boolean(authorInformation)
   const [isVisibleModalAuthor, setIsVisibleModalAuthor] = useState(initialisVisibleModalAuthor)
-  const [nameAuthor, setNameAuthor] = useState<Author>(authorInformation)  
+  const [nameAuthor, setNameAuthor] = useState<Author>(authorInformation)
 
   const addAuthor = () => {
     if (nameAuthor) {
       localStorage.setItem('author', JSON.stringify(nameAuthor))
       setIsVisibleModalAuthor(false)
-    }    
-  }  
-   
+    }
+  }
+
   // Изменение имени Title
   let informationTitle = localStorage.getItem('TitleList') !== null ? JSON.parse(String(localStorage.getItem('TitleList'))) : listTitle
   const [titleList, setTitleList] = useState(informationTitle)
@@ -48,7 +48,7 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
     localStorage.setItem('TitleList', JSON.stringify(titleList))
   }, [titleList])
 
-  const editTitle = () => {    
+  const editTitle = () => {
     const body = titleList.map((item: List) => {
       if (item.id === titleBodyItem?.id) {
         item.title = valueTitle
@@ -69,15 +69,17 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
   const [cardCommentValue, setCardCommentValue] = useState('')
   const [redrawingCommit, setRedrawingCommit] = useState(false)
   useEffect(() => {
-    if (infoCard !== undefined) {      
-      const infoCards = JSON.parse(String(localStorage.getItem(infoCard.nameKeyList)))      
+    if (infoCard !== undefined) {
+      const infoCards = JSON.parse(String(localStorage.getItem(infoCard.nameKeyList)))
       setBodyCard(infoCards)
       const description = infoCards.find((item: { id: number; }) => item.id === infoCard.CardID).description
       setCardDescription(description)
       const arrayOfComments = infoCards.find((item: { id: number; }) => item.id === infoCard.CardID).comments
+
       setCardComments(arrayOfComments)
     }
   }, [infoCard, redrawingDescription])
+
 
   const addDescription = () => {
     if (descValue !== '') {
@@ -90,39 +92,59 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
       if (infoCard) {
         localStorage.setItem(infoCard.nameKeyList, JSON.stringify(body))
       }
-      setRedrawingDescription(!redrawingDescription)      
+      setDescValue('')
+      setRedrawingDescription(!redrawingDescription)
     }
   }
   const deleteDescription = () => {
-    if (descValue !== '') {
-      const body = (bodyCard || []).map((item: AllInformation) => {
-        if (item.id === infoCard?.CardID) {
-          item.description = ''
-        }
-        return item
-      })
-      if (infoCard) {
-        localStorage.setItem(infoCard.nameKeyList, JSON.stringify(body))
+    const body = (bodyCard || []).map((item: AllInformation) => {
+      if (item.id === infoCard?.CardID) {
+        item.description = ''
       }
-      setRedrawingDescription(!redrawingDescription)      
+      return item
+    })
+    if (infoCard) {
+      localStorage.setItem(infoCard.nameKeyList, JSON.stringify(body))
     }
+    setDescValue('')
+    setRedrawingDescription(!redrawingDescription)
   }
   const addComment = (event: { key: string; }) => {
     if (event.key === 'Enter' && cardCommentValue !== '') {
       const body = (bodyCard || []).map((item: AllInformation) => {
         if (item.id === infoCard?.CardID) {
-          item.comments.push({id: Date.now(), title: cardCommentValue}) 
+          item.comments.push({ id: Date.now(), title: cardCommentValue })
+
         }
         return item
       })
       if (infoCard) {
         localStorage.setItem(infoCard.nameKeyList, JSON.stringify(body))
       }
-      // setRedrawingCommit(!redrawingCommit)    
-      setRedrawingDescription(!redrawingDescription)  
+      setRedrawingDescription(!redrawingDescription)
     }
   }
-  
+ 
+  const deleteCommit = (id: number) => {
+    const nameKeyThisList = infoCard?.nameKeyList
+    if (nameKeyThisList) {
+      // setCardComments(cardComments?.filter(subItem => subItem.id !== id))
+      
+
+      const body = (bodyCard || []).map((item: AllInformation) => {
+        if (item.id === infoCard?.CardID) {
+          item.comments.filter(subItem => subItem.id !== id)
+        }
+        return item
+      })
+      console.log(body);
+      
+      if (infoCard) {
+        localStorage.setItem(infoCard.nameKeyList, JSON.stringify(body))
+      }
+      
+    }
+  }
   return (
     <AppSell>
       {/* Модальное окно Author */}
@@ -141,7 +163,7 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
         <InputDefault
           defaultValue={titleBodyItem?.title}
           type="text"
-          onChange={event => setValueTitle(event.target.value)}          
+          onChange={event => setValueTitle(event.target.value)}
         />
         <ButtonDefault onClick={() => editTitle()}>Подтвердить</ButtonDefault>
       </Modal>
@@ -174,7 +196,12 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
           />
           <CommitList>
             {cardComments?.map((commit: List) => (
-              <Commit key={commit.id} commit={commit.title} />
+              <Commit
+                key={commit.id}
+                id={commit.id}
+                commit={commit.title}
+                deleteCommit={deleteCommit}
+              />
             ))}
           </CommitList>
         </CommitShell>
@@ -187,7 +214,6 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
         setTitleBodyItem={setTitleBodyItem}
         setIsVisibleModalTitle={setIsVisibleModalTitle}
         setIsVisibleModalCard={setIsVisibleModalCard}
-        redrawingCommit={redrawingCommit}
       />
     </AppSell>
   )
