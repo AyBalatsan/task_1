@@ -1,39 +1,38 @@
-import React, { FC, useState, useEffect } from 'react';
+import { FC, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { ListCard, InfoCard, ListTitle} from '../../types';
+import { ListCard, ListTitle } from '../../types';
 import { InputDefault } from '../../styles/input/InputDefault';
-import {Card} from '..';
+import { Card } from '..';
+
 interface MainTaskProps {
-  title: string,
+  title: string
   id: number
-  setIsVisibleModalTitle: {(modal: boolean): void;},
-  setIsVisibleModalCard: {(modal: boolean): void}
-  setTitleBodyItem: {(modal: ListTitle): void;}
-  setInfoCard: {(modal: InfoCard): void}
+  onClickCard(id: number, title: string, nameKeyCard: string): void
+  onClickTitle(id: number, title: string): void  
+  
 }
 const listCard: Array<ListCard> = []
 
 const TaskItem: FC<MainTaskProps> = ({
   id,
-  title, 
-  setIsVisibleModalTitle, 
-  setIsVisibleModalCard, 
-  setTitleBodyItem, 
-  setInfoCard
-})=> {    
+  title,
+  onClickCard,
+  onClickTitle,
+}) => {
 
-  // Для карточек
-  let allCardsInTheList = localStorage.getItem('Card' + id) !== null ? JSON.parse(String(localStorage.getItem('Card' + id))) : listCard
-  const [card, setCard] = useState(allCardsInTheList)
-  const [newName, setNewName]= useState('')
-
+  const dataThisCard: string | null = localStorage.getItem('Card' + id)
+  let  infoDataThisCard = dataThisCard !== null ? JSON.parse(dataThisCard) : listCard
+  const [card, setCard] = useState(infoDataThisCard)
+  const [newName, setNewName] = useState('')
+ 
+  
   useEffect(() => {
-    localStorage.setItem('Card' + id, JSON.stringify(card))    
+    localStorage.setItem('Card' + id, JSON.stringify(card))
   }, [card])
 
   const addCard = (event: { key: string; }) => {
-    if (event.key === 'Enter' && newName !== '') {      
-      setCard( [
+    if (event.key === 'Enter' && newName !== '') {
+      setCard([
         ...card,
         {
           id: Date.now(),
@@ -47,29 +46,25 @@ const TaskItem: FC<MainTaskProps> = ({
   }
   return (
     <ItemTaskWrapper>
-      <h2 onClick={()=> {
-        setIsVisibleModalTitle(true)
-        setTitleBodyItem({id, title})
-      }}>{title}</h2>      
+      <h2 onClick={() => onClickTitle(id, title)}>{title}</h2>
       <InputDefault
         type="text"
         value={newName}
         onChange={event => setNewName(event.target.value)}
         onKeyPress={addCard}
         placeholder='Todo name'
-       />
+      />
       <ListTask>
-        {card.map((item: { id: number; title: string; comments: Array<ListCard>; }) =>(
+        {card.map((item: { id: number; title: string; comments: Array<ListCard>; }) => (
           <Card
             key={item.id}
             id={item.id}
             nameKeyCard={'Card' + id}
             title={item.title}
             comments={item.comments.length}
-            setIsVisibleModalCard={setIsVisibleModalCard}
-            setInfoCard={setInfoCard}
+            onClickCard={onClickCard}
           />
-      ))}
+        ))}
       </ListTask>
     </ItemTaskWrapper>
   )

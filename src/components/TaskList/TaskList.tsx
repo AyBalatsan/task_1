@@ -1,40 +1,32 @@
-import React, {FC} from 'react';
-import {TaskItem} from '..';
+import { FC } from 'react';
+import { TaskItem } from '..';
 import styled from 'styled-components';
-import {InfoCard} from '../../types'
+import { ListTitle } from '../../types';
 
-type List = {id: number, title: string}
-
-interface AllDataProps {   
-  setIsVisibleModalTitle: {(modal: boolean): void;}
-  setIsVisibleModalCard: {(modal: boolean): void;}
-  setTitleBodyItem: {(modal: List): void;}
-  setInfoCard: {(modal: InfoCard): void}
-  titleList: Array<List> 
+interface AllDataProps {
+  listOfTitle: Array<ListTitle> | null
+  onClickCard(id: number, title: string, nameKeyCard: string): void
+  onClickTitle(id: number, title: string): void
 }
 
 const TaskList: FC<AllDataProps> = (
   {
-    setIsVisibleModalTitle,  
-    setIsVisibleModalCard,
-    setTitleBodyItem, 
-    setInfoCard,
-    titleList,
-  }) => {    
-  return (    
-    <ListTask>      
-      {titleList.map((item: { id: number; title: string; }) => (
-        <TaskItem 
-          key={item.id} 
-          id={item.id} 
-          title={item.title} 
-          setIsVisibleModalTitle = {setIsVisibleModalTitle}
-          setIsVisibleModalCard = {setIsVisibleModalCard}
-          setTitleBodyItem = {setTitleBodyItem}
-          setInfoCard = {setInfoCard}
+    onClickCard,
+    onClickTitle,
+    listOfTitle,
+  }) => {
+  return (
+    <ListTask>
+      {listOfTitle?.map((item: { id: number; title: string; }) => (
+        <TaskItem
+          key={item.id}
+          id={item.id}
+          title={item.title}
+          onClickCard={onClickCard}
+          onClickTitle={onClickTitle}
         />
       ))}
-    </ListTask>    
+    </ListTask>
   )
 }
 

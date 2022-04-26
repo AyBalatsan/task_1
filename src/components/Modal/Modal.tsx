@@ -1,4 +1,4 @@
-import React, {FC, useEffect,} from "react";
+import React, { FC, useEffect, } from "react";
 import styled from 'styled-components';
 import { ButtonClose } from "../../styles/button";
 
@@ -7,7 +7,7 @@ interface PopUp {
   setActive: (target: boolean) => void,
   children?: React.ReactNode
 }
-const Modal: FC<PopUp> = ({active, setActive, children}) => {  
+const Modal: FC<PopUp> = ({ active, setActive, children }) => {
   const closeModal = (e: KeyboardEvent) => {
     if (e.key === 'Escape') {
       setActive(false)
@@ -20,11 +20,11 @@ const Modal: FC<PopUp> = ({active, setActive, children}) => {
   }, [])
 
   return (
-    <WrapperModal  
+    <WrapperModal
       active={active}
       onClick={() => setActive(false)}
     >
-      <ModalContent 
+      <ModalContent
         active={active}
         onClick={e => e.stopPropagation()}
       >
@@ -37,7 +37,7 @@ const Modal: FC<PopUp> = ({active, setActive, children}) => {
 
 export default Modal;
 
-const WrapperModal = styled.div.attrs((props: {active: boolean}) => props)`
+const WrapperModal = styled.div.attrs((props: { active: boolean }) => props)`
   height: 100vh;
   width: 100vw;
   background-color: rgba(0,0,0, 0.4);
@@ -49,17 +49,16 @@ const WrapperModal = styled.div.attrs((props: {active: boolean}) => props)`
   justify-content: center;
   z-index: 20;
   max-height: none;
-  opacity: ${({active}) => active ? 1 : 0};
-  pointer-events:${({active}) => active ? "all" : "none"}; 
+  opacity: ${({ active }) => active ? 1 : 0};
+  pointer-events:${({ active }) => active ? "all" : "none"}; 
   transition: 0.5s all;    
 `
-
-const ModalContent = styled.div.attrs((props: {active: boolean}) => props)`
+const ModalContent = styled.div.attrs((props: { active: boolean }) => props)`
   position: relative;
   padding: 20px;
   border-radius: 12px;
   background-color: antiquewhite;
   width: 50vw;
-  transform: ${({active}) => active ? "scale(1)" : "scale(0)"};
+  transform: ${({ active }) => active ? "scale(1)" : "scale(0)"};
   transition: 0.5s all;
 `

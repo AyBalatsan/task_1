@@ -1,18 +1,18 @@
-import React, { useState, useEffect, FC } from 'react';
+import { useState, useEffect, FC } from 'react';
 import styled from 'styled-components';
 import { TaskList, Modal, Commit } from '../components';
 import { InputDefault } from '../styles/input/InputDefault';
 import { ButtonDefault, ButtonDelete } from '../styles/button';
-import { InfoCard, AllInformation, ListTitle } from '../types'
+import { InfoCard, AllInformation, ListTitle, LocalStorageTitle } from '../types'
 
 type Author = string | null
 type List = { id: number, title: string }
 
 interface AllDataProps {
-  listTitle: Array<List>
+  mockDateTitle: Array<List>
 }
 
-const MainPage: FC<AllDataProps> = ({ listTitle }) => {
+const MainPage: FC<AllDataProps> = ({ mockDateTitle }) => {
 
   const [isVisibleModalTitle, setIsVisibleModalTitle] = useState(false)
   const [isVisibleModalCard, setIsVisibleModalCard] = useState(false)
@@ -21,10 +21,7 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
   // Данные строки title
   const [valueTitle, setValueTitle] = useState('')
   // Хранение id title
-  const [titleBodyItem, setTitleBodyItem] = useState<ListTitle>()
-  // Хранение информации Card
-  const [infoCard, setInfoCard] = useState<InfoCard>()
-
+  const [titleBodyItem, setTitleBodyItem] = useState<ListTitle>()  
   // Смотрит есть ли имя автора, если нет активирует модалку 
   let authorInformation: Author = localStorage.getItem('author') !== null ? JSON.parse(String(localStorage.getItem('author'))) : null
 
@@ -39,52 +36,51 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
     }
   }
 
-  // Изменение имени Title
-  let title = localStorage.getItem('TitleList') !== null ? localStorage.getItem('TitleList') : listTitle
-  const [titleList, setTitleList] = useState(title)
-  // Тут нужно переписать, перерисовка происходит при перезагрузки Убрать в название Title
-
+  const listOfSection: string | null = localStorage.getItem('TitleList')
+  let informationTitle = listOfSection !== null ? JSON.parse(listOfSection) : mockDateTitle
+  const [listOfTitle, setListOfTitle] = useState<LocalStorageTitle>(informationTitle)
+  
   useEffect(() => {
-    localStorage.setItem('TitleList', JSON.stringify(titleList))
-  }, [titleList])
+    localStorage.setItem('TitleList', JSON.stringify(listOfTitle))
+  }, [listOfTitle])
 
   const editTitle = () => {
-    const body = titleList.map((item: List) => {
-      if (item.id === titleBodyItem?.id) {
-        item.title = valueTitle
-      }
-      return item
-    })
-    setTitleList(body)
-    setIsVisibleModalTitle(false)
+    if (Array.isArray(listOfTitle)) {
+      const body = listOfTitle?.map((item: List) => {
+        if (item.id === titleBodyItem?.id) {
+          item.title = valueTitle
+        }
+        return item
+      })
+      setListOfTitle(body)
+      setIsVisibleModalTitle(false)
+    }
   }
 
   // добавление Description 
-  const [bodyCard, setBodyCard] = useState <Array <any>>()
+  const [bodyCard, setBodyCard] = useState<Array<AllInformation>>()
   const [cardDescription, setCardDescription] = useState()
   const [descValue, setDescValue] = useState('')
-  const [redrawingDescription, setRedrawingDescription] = useState(false)
   // добавление comment
   const [cardComments, setCardComments] = useState<List[]>()
   const [cardCommentValue, setCardCommentValue] = useState('')
-  const [redrawingCommit, setRedrawingCommit] = useState(false)
-
-
-  useEffect(() => {   
+  // Хранение информации Card
+  const [infoCard, setInfoCard] = useState<InfoCard>()
+  useEffect(() => {
+    
     if (infoCard !== undefined) {
       const infoCards = JSON.parse(String(localStorage.getItem(infoCard.nameKeyList)))
-        setBodyCard(infoCards)
-        const description = infoCards.find((item: { id: number; }) => item.id === infoCard.CardID).description
-        setCardDescription(description)
-        const arrayOfComments = infoCards.find((item: { id: number; }) => item.id === infoCard.CardID).comments
-  
-        setCardComments(arrayOfComments)
-      } 
-  }, [infoCard, redrawingDescription])
+      setBodyCard(infoCards)
+      const description = infoCards.find((item: { id: number; }) => item.id === infoCard.CardID).description
+      setCardDescription(description)
+      const arrayOfComments = infoCards.find((item: { id: number; }) => item.id === infoCard.CardID).comments
+      setCardComments(arrayOfComments)
+    }
+  }, [infoCard, cardComments, cardDescription, bodyCard])
 
 
   const addDescription = () => {
-    if (descValue !== '') {
+    if (descValue !== '') {      
       const body = bodyCard?.map((item: AllInformation) => {
         if (item.id === infoCard?.CardID) {
           item.description = descValue
@@ -93,73 +89,92 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
       })
       if (infoCard) {
         localStorage.setItem(infoCard.nameKeyList, JSON.stringify(body))
+        setDescValue('')
       }
-      setDescValue('')
-      setRedrawingDescription(!redrawingDescription)
     }
   }
   const deleteDescription = () => {
-    const body = bodyCard?.map((item: AllInformation) => {
-      if (item.id === infoCard?.CardID) {
-        item.description = ''
-      }
-      return item
-    })
-    if (infoCard) {
-      localStorage.setItem(infoCard.nameKeyList, JSON.stringify(body))
-    }
-    setDescValue('')
-    setRedrawingDescription(!redrawingDescription)
-  }
-  const addComment = (event: { key: string; }) => {
-    if (event.key === 'Enter' && cardCommentValue !== '') {
+    if (descValue !== '') {
       const body = bodyCard?.map((item: AllInformation) => {
         if (item.id === infoCard?.CardID) {
-          item.comments.push({ id: Date.now(), title: cardCommentValue })
-
+          item.description = ''
         }
         return item
       })
       if (infoCard) {
         localStorage.setItem(infoCard.nameKeyList, JSON.stringify(body))
       }
-      setRedrawingDescription(!redrawingDescription)
     }
-  } 
+  }
+  const addComment = (event: { key: string; }) => {
+    if (event.key === 'Enter' && cardCommentValue !== '') {
+      const body = bodyCard?.map((item: AllInformation) => {
+        if (item.id === infoCard?.CardID) {
+          item.comments.push({ id: Date.now(), title: cardCommentValue })
+        }
+        return item
+      })
+      if (infoCard) {
+        localStorage.setItem(infoCard.nameKeyList, JSON.stringify(body))
+      } 
+    }
+  }
   const deleteCommit = (id: number) => {
     const nameKeyThisList = infoCard?.nameKeyList
     if (nameKeyThisList) {
       const body = bodyCard?.map((item: AllInformation) => {
         if (item.id === infoCard?.CardID) {
-          setCardComments(item.comments.filter(subItem => subItem.id !== id))  
-          return {...item, comments: item.comments.filter(subItem => subItem.id !== id)}                  
+          setCardComments(item.comments.filter(subItem => subItem.id !== id))
+          return { ...item, comments: item.comments.filter(subItem => subItem.id !== id) }
         }
         return item
-      })            
+      })
       if (infoCard) {
         localStorage.setItem(nameKeyThisList, JSON.stringify(body))
-      }      
+      }
     }
-    setRedrawingCommit(!redrawingCommit)
+  }
+  const editCommit = (id: number, text: string) => {
+    const nameKeyThisList = infoCard?.nameKeyList
+    if (nameKeyThisList) {
+      const body = bodyCard?.map((item: AllInformation) => {
+        if (item.id === infoCard?.CardID) {
+          item.comments.map((subitem) => {
+            if (subitem.id === id) {
+              subitem.title = text
+            }
+            return subitem
+          })
+        }
+        return item
+      })
+      if (infoCard) {
+        localStorage.setItem(nameKeyThisList, JSON.stringify(body))
+      }
+    }
   }
   const deleteCard = () => {
-    const nameKeyThisList = infoCard?.nameKeyList 
+    const nameKeyThisList = infoCard?.nameKeyList
     if (nameKeyThisList) {
       const body = bodyCard?.filter((subItem: AllInformation) => subItem.id !== infoCard.CardID)
       if (infoCard) {
         localStorage.setItem(nameKeyThisList, JSON.stringify(body))
       }
-      setIsVisibleModalCard(false)            
-  }  
-}   
-  const onClick = ()=>{    
-      setIsVisibleModalCard(true)        
-      setInfoCard({
-        CardID: id,
-        CardTitle: title,
-        comments: [],
-        nameKeyList: nameKeyCard
-      })           
+      setIsVisibleModalCard(false)
+    }
+  }
+  const onClickCard = (id: number, title: string, nameKeyCard: string): void => {
+    setIsVisibleModalCard(true)
+    setInfoCard({
+      CardID: id,
+      CardTitle: title,
+      comments: [],
+      nameKeyList: nameKeyCard
+    })
+  }
+  const onClickTitle = (id: number, title: string): void => {
+    setIsVisibleModalTitle(true)
+    setTitleBodyItem({ id, title })
   }
   return (
     <AppSell>
@@ -173,6 +188,7 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
         />
         <ButtonDefault onClick={() => addAuthor()}>Подтвердить</ButtonDefault>
       </Modal>
+
       {/* Модальное окно Title */}
       <Modal active={isVisibleModalTitle} setActive={setIsVisibleModalTitle}>
         <p>Изменить название блока задач</p>
@@ -183,20 +199,22 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
         />
         <ButtonDefault onClick={() => editTitle()}>Подтвердить</ButtonDefault>
       </Modal>
+
       {/* Модальное окно Card */}
-      <Modal active={isVisibleModalCard} setActive={setIsVisibleModalCard}>
-        {/*Ветвление в компоненте */}
+      <Modal active={isVisibleModalCard} setActive={setIsVisibleModalCard}>        
         <h3>Имя карточки: {infoCard?.CardTitle}</h3>
         <p>Автор поста: {nameAuthor}</p>
         <DescriptionShell>
           <p>Description: {cardDescription}</p>
           <CommitArea
+            value={descValue}
             onChange={event => setDescValue(event.target.value)}
           />
           <ShellButton>
             <ButtonDefault
               onClick={() => addDescription()}
             >Добавить описание</ButtonDefault>
+            <button><img src="/edit.png" alt="edit" /></button>
             <button
               onClick={() => deleteDescription()}
             ><img src="/delete.png" alt="del" /></button>
@@ -215,23 +233,21 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
                 key={commit.id}
                 id={commit.id}
                 commit={commit.title}
-                deleteCommit={deleteCommit} 
-                // setCardComments={setCardComments}               
+                deleteCommit={deleteCommit}
+                editCommit={editCommit}
               />
             ))}
           </CommitList>
         </CommitShell>
-        <ButtonDelete 
+        <ButtonDelete
           onClick={() => deleteCard()}
         >Delete this card</ButtonDelete>
       </Modal>
       <Title>Task Board</Title>
       <TaskList
-        titleList={titleList}
-        setInfoCard={setInfoCard}
-        setTitleBodyItem={setTitleBodyItem}
-        setIsVisibleModalTitle={setIsVisibleModalTitle}
-        setIsVisibleModalCard={setIsVisibleModalCard}
+        listOfTitle={listOfTitle}
+        onClickCard={onClickCard}
+        onClickTitle={onClickTitle}
       />
     </AppSell>
   )

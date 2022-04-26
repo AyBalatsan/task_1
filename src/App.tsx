@@ -1,13 +1,12 @@
-import React from 'react';
 import styled from 'styled-components';
 import MainPage from './pages';
 import { listTitle } from './mockDate';
 
-const App = () => {     
-return (      
-  <AppWrapper>
-    <MainPage listTitle = {listTitle} />
-  </AppWrapper>
+const App = () => {
+  return (
+    <AppWrapper>
+      <MainPage mockDateTitle={listTitle} />
+    </AppWrapper>
   );
 }
 

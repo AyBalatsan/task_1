@@ -1,26 +1,30 @@
-import React, {FC} from 'react';
+import { FC } from 'react';
 import styled from 'styled-components';
-import { InfoCard} from '../../types';
 
 interface CardProps {
   id: number,
   title: string,
   comments: number,
   nameKeyCard: string
-  setIsVisibleModalCard: {(modal: boolean): void}
-  setInfoCard: {(modal: InfoCard): void} 
+  onClickCard(id: number, title: string, nameKeyCard: string): void
 }
 
-const Card: FC<CardProps> = ({id, title, comments, setIsVisibleModalCard, setInfoCard, nameKeyCard}) => {    
-  return (    
+const Card: FC<CardProps> = ({
+  id,
+  title,
+  comments,
+  nameKeyCard,
+  onClickCard
+}) => {
+  return (
     <CardItem
-      onClick={onClick}      
+      onClick={() => onClickCard(id, title, nameKeyCard)}
     >
       <p>{title}</p>
       <PhotoAndCounter>
         <img src='/email.png' alt='message' width={24} height={24} />
         <p>{comments}</p>
-      </PhotoAndCounter>      
+      </PhotoAndCounter>
     </CardItem>
   )
 }
@@ -41,4 +45,3 @@ const PhotoAndCounter = styled.div`
   justify-content: space-between;
   min-width: 50px;
 `
-
