@@ -14,16 +14,7 @@ interface CardProps {
 const Card: FC<CardProps> = ({id, title, comments, setIsVisibleModalCard, setInfoCard, nameKeyCard}) => {    
   return (    
     <CardItem
-      onClick={ ()=> {
-        setIsVisibleModalCard(true)        
-        setInfoCard({
-          CardID: id,
-          CardTitle: title,
-          comments: [],
-          nameKeyList: nameKeyCard
-        })
-        }        
-      }      
+      onClick={onClick}      
     >
       <p>{title}</p>
       <PhotoAndCounter>

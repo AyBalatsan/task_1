@@ -40,8 +40,8 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
   }
 
   // Изменение имени Title
-  let informationTitle = localStorage.getItem('TitleList') !== null ? JSON.parse(String(localStorage.getItem('TitleList'))) : listTitle
-  const [titleList, setTitleList] = useState(informationTitle)
+  let title = localStorage.getItem('TitleList') !== null ? localStorage.getItem('TitleList') : listTitle
+  const [titleList, setTitleList] = useState(title)
   // Тут нужно переписать, перерисовка происходит при перезагрузки Убрать в название Title
 
   useEffect(() => {
@@ -60,7 +60,7 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
   }
 
   // добавление Description 
-  const [bodyCard, setBodyCard] = useState()
+  const [bodyCard, setBodyCard] = useState <Array <any>>()
   const [cardDescription, setCardDescription] = useState()
   const [descValue, setDescValue] = useState('')
   const [redrawingDescription, setRedrawingDescription] = useState(false)
@@ -85,7 +85,7 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
 
   const addDescription = () => {
     if (descValue !== '') {
-      const body = (bodyCard || []).map((item: AllInformation) => {
+      const body = bodyCard?.map((item: AllInformation) => {
         if (item.id === infoCard?.CardID) {
           item.description = descValue
         }
@@ -99,7 +99,7 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
     }
   }
   const deleteDescription = () => {
-    const body = (bodyCard || []).map((item: AllInformation) => {
+    const body = bodyCard?.map((item: AllInformation) => {
       if (item.id === infoCard?.CardID) {
         item.description = ''
       }
@@ -113,7 +113,7 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
   }
   const addComment = (event: { key: string; }) => {
     if (event.key === 'Enter' && cardCommentValue !== '') {
-      const body = (bodyCard || []).map((item: AllInformation) => {
+      const body = bodyCard?.map((item: AllInformation) => {
         if (item.id === infoCard?.CardID) {
           item.comments.push({ id: Date.now(), title: cardCommentValue })
 
@@ -129,7 +129,7 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
   const deleteCommit = (id: number) => {
     const nameKeyThisList = infoCard?.nameKeyList
     if (nameKeyThisList) {
-      const body = (bodyCard || []).map((item: AllInformation) => {
+      const body = bodyCard?.map((item: AllInformation) => {
         if (item.id === infoCard?.CardID) {
           setCardComments(item.comments.filter(subItem => subItem.id !== id))  
           return {...item, comments: item.comments.filter(subItem => subItem.id !== id)}                  
@@ -145,13 +145,22 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
   const deleteCard = () => {
     const nameKeyThisList = infoCard?.nameKeyList 
     if (nameKeyThisList) {
-      const body = (bodyCard || []).filter((subItem: AllInformation) => subItem.id !== infoCard.CardID)
+      const body = bodyCard?.filter((subItem: AllInformation) => subItem.id !== infoCard.CardID)
       if (infoCard) {
         localStorage.setItem(nameKeyThisList, JSON.stringify(body))
       }
       setIsVisibleModalCard(false)            
   }  
 }   
+  const onClick = ()=>{    
+      setIsVisibleModalCard(true)        
+      setInfoCard({
+        CardID: id,
+        CardTitle: title,
+        comments: [],
+        nameKeyList: nameKeyCard
+      })           
+  }
   return (
     <AppSell>
       {/* Модальное окно Author */}
@@ -206,7 +215,8 @@ const MainPage: FC<AllDataProps> = ({ listTitle }) => {
                 key={commit.id}
                 id={commit.id}
                 commit={commit.title}
-                deleteCommit={deleteCommit}                
+                deleteCommit={deleteCommit} 
+                // setCardComments={setCardComments}               
               />
             ))}
           </CommitList>

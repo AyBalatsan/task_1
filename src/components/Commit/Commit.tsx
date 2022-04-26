@@ -1,16 +1,26 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import styled from 'styled-components';
+import { InputDefault } from '../../styles/input/InputDefault';
 
 interface CommitProps {
   commit: string
   id: number
   deleteCommit: {(modal: number): void}
+  // setCardComments: {}
 }
 
-const Commit: FC<CommitProps> = ({commit, id, deleteCommit}) => {    
+const Commit: FC<CommitProps> = ({commit, id, deleteCommit}) => { 
+  const [commitValue, setCommitValue] = useState('')
+  const commitEdit = () =>{
+    // setCardComments()
+  }   
   return (       
     <CommitItem>
-      <CommitText>{commit}</CommitText>
+      <InputDefault
+          type="text"
+          defaultValue={commit}
+          onChange={event => setCommitValue(event.target.value)}
+        />
       <ShellButton>              
         <button><img src="/delete.png" alt="del" onClick={()=> deleteCommit(id)}/></button>
       </ShellButton>
