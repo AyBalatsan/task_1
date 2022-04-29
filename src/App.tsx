@@ -5,7 +5,7 @@ import { listTitle } from './mockDate';
 const App = () => {
   return (
     <AppWrapper>
-      <MainPage mockDateTitle={listTitle} />
+      <MainPage />
     </AppWrapper>
   );
 }
